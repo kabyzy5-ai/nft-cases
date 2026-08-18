@@ -6,6 +6,9 @@
     <title>Antidot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* ================================================
+           БАЗОВЫЕ СТИЛИ
+           ================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -13,7 +16,7 @@
         }
 
         body {
-            font-family: -apple-system, system-ui, sans-serif;
+            font-family: -apple-system, system-ui, 'Helvetica Neue', sans-serif;
             background: #0a0a0a;
             color: #fff;
             min-height: 100vh;
@@ -21,84 +24,220 @@
             overflow-x: hidden;
         }
 
-        /* ===== ВЕРХНИЙ БАР ===== */
+        /* ================================================
+           ВЕРХНИЙ БАР
+           ================================================ */
         .header {
-            padding: 20px;
+            padding: 20px 16px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 50;
         }
 
         .header .logo {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header .logo img {
+            width: 28px;
+            height: 28px;
+            filter: invert(1) brightness(0.8);
         }
 
         .header .balance {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 6px 14px 6px 10px;
+            border-radius: 20px;
             font-size: 14px;
-            opacity: 0.6;
+            font-weight: 600;
         }
 
-        /* ===== КОНТЕНТ ===== */
+        .header .balance img {
+            width: 20px;
+            height: 20px;
+            filter: invert(1) brightness(0.8);
+        }
+
+        /* ================================================
+           КОНТЕНТ
+           ================================================ */
         .content {
-            padding: 20px;
-            max-width: 400px;
+            padding: 16px;
+            max-width: 420px;
             margin: 0 auto;
         }
 
-        /* ===== КВЕСТЫ ===== */
-        .quest-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px;
+        /* ================================================
+           ПРОФИЛЬ (GLASS)
+           ================================================ */
+        .profile-card {
             padding: 16px;
-            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+            animation: slideUp 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a0a0a;
+            flex-shrink: 0;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info .name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .profile-info .username {
+            font-size: 12px;
+            opacity: 0.4;
+        }
+
+        .profile-info .stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 4px;
+        }
+
+        .profile-info .stats span {
+            font-size: 11px;
+            opacity: 0.5;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .profile-info .stats img {
+            width: 14px;
+            height: 14px;
+            filter: invert(1) brightness(0.4);
+        }
+
+        /* ================================================
+           СТРАНИЦЫ
+           ================================================ */
+        .page {
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ================================================
+           КВЕСТЫ (GLASS)
+           ================================================ */
+        .quest-card {
+            padding: 14px 16px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 14px;
             transition: all 0.3s;
+            animation: slideUp 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quest-card:nth-child(2) {
+            animation-delay: 0.05s;
+        }
+        .quest-card:nth-child(3) {
+            animation-delay: 0.1s;
         }
 
         .quest-card.completed {
             opacity: 0.4;
-            border-color: rgba(255,255,255,0.02);
+            border-color: rgba(255, 255, 255, 0.02);
         }
 
-        .quest-icon {
-            width: 48px;
-            height: 48px;
+        .quest-card .icon {
+            width: 42px;
+            height: 42px;
             border-radius: 12px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
         }
 
-        .quest-icon img {
-            width: 28px;
-            height: 28px;
-            filter: invert(1) brightness(0.8);
+        .quest-card .icon img {
+            width: 24px;
+            height: 24px;
+            filter: invert(1) brightness(0.7);
         }
 
-        .quest-info {
+        .quest-card .info {
             flex: 1;
         }
 
-        .quest-info .title {
-            font-size: 14px;
+        .quest-card .info .title {
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 4px;
         }
 
-        .quest-info .desc {
-            font-size: 12px;
+        .quest-card .info .desc {
+            font-size: 11px;
             opacity: 0.4;
+            margin-top: 2px;
         }
 
-        .quest-reward {
+        .quest-card .reward {
             display: flex;
             align-items: center;
             gap: 4px;
@@ -107,14 +246,14 @@
             color: #f7971e;
         }
 
-        .quest-reward img {
+        .quest-card .reward img {
             width: 18px;
             height: 18px;
             filter: invert(1) brightness(0.8);
         }
 
         .quest-btn {
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             border: none;
             color: #fff;
             padding: 6px 16px;
@@ -130,23 +269,288 @@
         }
 
         .quest-btn.done {
-            background: rgba(255,255,255,0.02);
+            background: rgba(255, 255, 255, 0.02);
             opacity: 0.3;
         }
 
-        /* ===== НИЖНЕЕ МЕНЮ ===== */
+        /* ================================================
+           КНОПКИ
+           ================================================ */
+        .action-btn {
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:active {
+            transform: scale(0.96);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #0a0a0a;
+        }
+
+        .action-btn.glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn.glass:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .action-btn img {
+            width: 20px;
+            height: 20px;
+            filter: invert(1) brightness(0.8);
+        }
+
+        .action-btn.primary img {
+            filter: invert(1) brightness(0.2);
+        }
+
+        /* ================================================
+           СТАТУС
+           ================================================ */
+        .status-msg {
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.3;
+            margin-top: 12px;
+            padding: 8px;
+            transition: all 0.3s;
+        }
+
+        .status-msg.success {
+            opacity: 0.8;
+            color: #22c55e;
+        }
+
+        .status-msg.error {
+            opacity: 0.8;
+            color: #ef4444;
+        }
+
+        .status-msg.info {
+            opacity: 0.8;
+            color: #60a5fa;
+        }
+
+        /* ================================================
+           🍸 LIQUID GLASS ЭФФЕКТ (iOS 26)
+           ================================================ */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ЖИДКИЙ БЛИК (основная магия) */
+        .glass::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle at 30% 40%,
+                rgba(255, 255, 255, 0.15) 0%,
+                rgba(255, 255, 255, 0.05) 30%,
+                transparent 60%
+            );
+            animation: liquidFlow 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ВТОРОЙ БЛИК (отражение снизу) */
+        .glass::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -20%;
+            width: 80%;
+            height: 60%;
+            background: radial-gradient(
+                circle at 70% 80%,
+                rgba(255, 255, 255, 0.08) 0%,
+                transparent 60%
+            );
+            animation: liquidFlow2 10s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* АНИМАЦИЯ ДЛЯ БЛИКА 1 */
+        @keyframes liquidFlow {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                opacity: 0.6;
+            }
+            25% {
+                transform: translate(5%, 8%) scale(1.1) rotate(5deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-3%, 5%) scale(0.95) rotate(-3deg);
+                opacity: 0.7;
+            }
+            75% {
+                transform: translate(8%, -5%) scale(1.05) rotate(4deg);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                opacity: 0.6;
+            }
+        }
+
+        /* АНИМАЦИЯ ДЛЯ БЛИКА 2 */
+        @keyframes liquidFlow2 {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-10%, -15%) scale(1.3);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate(5%, 10%) scale(0.8);
+                opacity: 0.3;
+            }
+        }
+
+        /* МИКРО-БЛИКИ (мелкие пузырьки/искры) */
+        .glass .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: sparkleFloat 12s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glass .sparkle:nth-child(1) {
+            top: 15%;
+            left: 20%;
+            animation-delay: 0s;
+            width: 3px;
+            height: 3px;
+        }
+
+        .glass .sparkle:nth-child(2) {
+            top: 70%;
+            left: 75%;
+            animation-delay: 3s;
+            width: 5px;
+            height: 5px;
+        }
+
+        .glass .sparkle:nth-child(3) {
+            top: 40%;
+            left: 60%;
+            animation-delay: 6s;
+            width: 4px;
+            height: 4px;
+        }
+
+        .glass .sparkle:nth-child(4) {
+            top: 80%;
+            left: 25%;
+            animation-delay: 2s;
+            width: 3px;
+            height: 3px;
+        }
+
+        .glass .sparkle:nth-child(5) {
+            top: 25%;
+            left: 85%;
+            animation-delay: 5s;
+            width: 4px;
+            height: 4px;
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(15px, -25px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* ХОВЕР ЭФФЕКТ — стекло "оживает" */
+        .glass:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 8px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 0 60px rgba(255, 255, 255, 0.03);
+        }
+
+        .glass:hover::before {
+            animation-duration: 4s;
+        }
+
+        /* Контент внутри стекла должен быть поверх анимации */
+        .glass > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ================================================
+           НИЖНЕЕ МЕНЮ
+           ================================================ */
         .bottom-menu {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(10,10,10,0.95);
+            background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             justify-content: space-around;
-            padding: 8px 0;
+            padding: 8px 0 12px;
             z-index: 100;
         }
 
@@ -186,48 +590,20 @@
         .menu-item.active span {
             opacity: 0.8;
         }
-
-        /* ===== СТРАНИЦЫ ===== */
-        .page {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== ГЛАВНАЯ ===== */
-        .welcome {
-            text-align: center;
-            padding: 30px 0;
-        }
-
-        .welcome h2 {
-            font-size: 24px;
-            font-weight: 300;
-            letter-spacing: 4px;
-            margin-bottom: 8px;
-        }
-
-        .welcome p {
-            opacity: 0.3;
-            font-size: 13px;
-            letter-spacing: 2px;
-        }
     </style>
 </head>
 <body>
 
     <!-- ===== ВЕРХНИЙ БАР ===== -->
     <div class="header">
-        <div class="logo">✦ ANTIDOT</div>
-        <div class="balance">🎰 0</div>
+        <div class="logo">
+            <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="logo">
+            ANTIDOT
+        </div>
+        <div class="balance" id="balanceDisplay">
+            <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="spin">
+            <span id="spinCount">0</span>
+        </div>
     </div>
 
     <!-- ===== КОНТЕНТ ===== -->
@@ -235,11 +611,52 @@
 
         <!-- ===== ГЛАВНАЯ ===== -->
         <div class="page active" id="page-home">
-            <div class="welcome">
-                <h2>✦ КЕЙСЫ ✦</h2>
-                <p>открывай и получай награды</p>
+
+            <!-- ПРОФИЛЬ С GLASS-ЭФФЕКТОМ -->
+            <div class="profile-card glass">
+                <!-- МИКРО-БЛИКИ -->
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+
+                <div class="profile-avatar" id="avatarLetter">👤</div>
+                <div class="profile-info">
+                    <div class="name" id="userName">Загрузка...</div>
+                    <div class="username" id="userTag">@username</div>
+                    <div class="stats">
+                        <span>
+                            <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="spins">
+                            <span id="statSpins">0</span>
+                        </span>
+                        <span>
+                            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="refs">
+                            <span id="statRefs">0</span>
+                        </span>
+                    </div>
+                </div>
             </div>
-            <!-- Тут будет твой кейс -->
+
+            <div style="text-align:center;padding:10px 0 5px;opacity:0.2;font-size:11px;letter-spacing:3px;">
+                ✦ ОТКРЫВАЙ КЕЙСЫ ✦
+            </div>
+
+            <!-- ТЕСТОВАЯ КНОПКА (GLASS) -->
+            <button class="action-btn glass" onclick="testConnection()">
+                <img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png" alt="test">
+                📡 ТЕСТ СВЯЗИ С БОТОМ
+            </button>
+
+            <button class="action-btn glass" style="margin-top:8px;" onclick="getRefLink()">
+                🔗 ПОЛУЧИТЬ РЕФЕРАЛКУ
+            </button>
+
+            <button class="action-btn primary" style="margin-top:8px;" onclick="getProfile()">
+                👤 МОЙ ПРОФИЛЬ
+            </button>
+
+            <div class="status-msg" id="statusMsg">готов к работе</div>
         </div>
 
         <!-- ===== КВЕСТЫ ===== -->
@@ -247,51 +664,57 @@
             <h3 style="margin-bottom:16px;font-weight:300;letter-spacing:2px;opacity:0.6;">✦ КВЕСТЫ</h3>
 
             <!-- Квест 1 -->
-            <div class="quest-card" id="quest1">
-                <div class="quest-icon">
+            <div class="quest-card glass" id="quest1">
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="icon">
                     <img src="https://cdn-icons-png.flaticon.com/512/5968/5968895.png" alt="tg">
                 </div>
-                <div class="quest-info">
+                <div class="info">
                     <div class="title">Подписаться на канал</div>
                     <div class="desc">@AntidotChannel</div>
                 </div>
-                <div class="quest-reward">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1047/1047501.png" alt="reward">
+                <div class="reward">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="reward">
                     1
                 </div>
-                <button class="quest-btn" onclick="checkQuest(1)">→</button>
+                <button class="quest-btn" onclick="doQuest(1)">→</button>
             </div>
 
             <!-- Квест 2 -->
-            <div class="quest-card" id="quest2">
-                <div class="quest-icon">
+            <div class="quest-card glass" id="quest2">
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="icon">
                     <img src="https://cdn-icons-png.flaticon.com/512/5968/5968895.png" alt="tg">
                 </div>
-                <div class="quest-info">
+                <div class="info">
                     <div class="title">Зайти в чат</div>
                     <div class="desc">@AntidotChat</div>
                 </div>
-                <div class="quest-reward">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1047/1047501.png" alt="reward">
+                <div class="reward">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="reward">
                     3
                 </div>
-                <button class="quest-btn" onclick="checkQuest(2)">→</button>
+                <button class="quest-btn" onclick="doQuest(2)">→</button>
             </div>
 
             <!-- Квест 3 -->
-            <div class="quest-card" id="quest3">
-                <div class="quest-icon">
+            <div class="quest-card glass" id="quest3">
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="icon">
                     <img src="https://cdn-icons-png.flaticon.com/512/2838/2838912.png" alt="time">
                 </div>
-                <div class="quest-info">
+                <div class="info">
                     <div class="title">Подождать 1 час</div>
                     <div class="desc">⏳ вернись через час</div>
                 </div>
-                <div class="quest-reward">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1047/1047501.png" alt="reward">
+                <div class="reward">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="reward">
                     6
                 </div>
-                <button class="quest-btn" onclick="checkQuest(3)">→</button>
+                <button class="quest-btn" onclick="doQuest(3)">→</button>
             </div>
         </div>
 
@@ -304,61 +727,206 @@
             <span>ГЛАВНАЯ</span>
         </div>
         <div class="menu-item" onclick="switchPage('quests')">
-            <img src="https://cdn-icons-png.flaticon.com/512/1047/1047524.png" alt="quests">
+            <img src="https://cdn-icons-png.flaticon.com/512/54/54702.png" alt="quests">
             <span>КВЕСТЫ</span>
         </div>
-        <div class="menu-item" onclick="switchPage('home')">
-            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="friends">
-            <span>ДРУЗЬЯ</span>
-        </div>
-        <div class="menu-item" onclick="switchPage('home')">
-            <img src="https://cdn-icons-png.flaticon.com/512/1374/1374393.png" alt="wallet">
-            <span>КОШЕЛЕК</span>
+        <div class="menu-item" onclick="getProfile()">
+            <img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png" alt="profile">
+            <span>ПРОФИЛЬ</span>
         </div>
     </div>
 
+    <!-- ================================================
+    JAVASCRIPT
+    ================================================ -->
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
 
-        // ===== ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ =====
+        // ================================================
+        // ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
+        // ================================================
+        let userData = {};
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            const user = tg.initDataUnsafe.user;
+            userData = {
+                id: user.id,
+                firstName: user.first_name || 'User',
+                lastName: user.last_name || '',
+                username: user.username || 'username',
+                photoUrl: user.photo_url || ''
+            };
+
+            document.getElementById('userName').textContent = userData.firstName + ' ' + userData.lastName;
+            document.getElementById('userTag').textContent = '@' + userData.username;
+            document.getElementById('avatarLetter').textContent = userData.firstName.charAt(0).toUpperCase();
+        }
+
+        // ================================================
+        // ЛОКАЛЬНАЯ БД (localStorage)
+        // ================================================
+        const LocalDB = {
+            set(key, data) {
+                try {
+                    localStorage.setItem('antidot_' + key, JSON.stringify(data));
+                } catch (e) {
+                    console.warn('LocalStorage save error:', e);
+                }
+            },
+            get(key) {
+                try {
+                    const data = localStorage.getItem('antidot_' + key);
+                    return data ? JSON.parse(data) : null;
+                } catch (e) {
+                    console.warn('LocalStorage get error:', e);
+                    return null;
+                }
+            },
+            remove(key) {
+                localStorage.removeItem('antidot_' + key);
+            }
+        };
+
+        // ================================================
+        // КВЕСТЫ
+        // ================================================
+        const questStatus = { 1: false, 2: false, 3: false };
+        const savedQuests = LocalDB.get('quests');
+        if (savedQuests) {
+            Object.assign(questStatus, savedQuests);
+        }
+
+        function saveQuestStatus() {
+            LocalDB.set('quests', questStatus);
+        }
+
+        // ================================================
+        // БАЛАНС
+        // ================================================
+        let localSpins = parseInt(localStorage.getItem('antidot_spins')) || 0;
+
+        function updateLocalSpins(spins) {
+            localSpins = spins;
+            localStorage.setItem('antidot_spins', String(spins));
+            document.getElementById('spinCount').textContent = spins;
+            document.getElementById('statSpins').textContent = spins;
+        }
+
+        // ================================================
+        // ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
+        // ================================================
         function switchPage(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + page).classList.add('active');
 
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-            document.querySelector(`.menu-item:nth-child(${page === 'home' ? 1 : page === 'quests' ? 2 : 3})`).classList.add('active');
+            const map = { home: 0, quests: 1 };
+            document.querySelectorAll('.menu-item')[map[page] || 0].classList.add('active');
+
+            if (page === 'home') {
+                getProfile();
+            }
         }
 
-        // ===== КВЕСТЫ (ПРОВЕРКА) =====
-        function checkQuest(id) {
-            const card = document.getElementById('quest' + id);
+        // ================================================
+        // ЗАПРОС ПРОФИЛЯ
+        // ================================================
+        function getProfile() {
+            tg.sendData(JSON.stringify({
+                action: 'get_profile'
+            }));
+            setStatus('⏳ запрос профиля...', 'info');
+        }
+
+        // ================================================
+        // ТЕСТ СВЯЗИ
+        // ================================================
+        function testConnection() {
+            const testData = {
+                action: 'test_connection',
+                test_data: 'Hello from WebApp! Time: ' + new Date().toLocaleTimeString()
+            };
+            tg.sendData(JSON.stringify(testData));
+            setStatus('📡 тест отправлен...', 'info');
+        }
+
+        // ================================================
+        // ПОЛУЧИТЬ РЕФЕРАЛКУ
+        // ================================================
+        function getRefLink() {
+            tg.sendData(JSON.stringify({
+                action: 'get_ref_link'
+            }));
+            setStatus('🔗 запрос ссылки...', 'info');
+        }
+
+        // ================================================
+        // КВЕСТ
+        // ================================================
+        function doQuest(questId) {
+            const card = document.getElementById('quest' + questId);
             const btn = card.querySelector('.quest-btn');
 
-            if (btn.classList.contains('done')) {
+            if (questStatus[questId]) {
+                setStatus('❌ квест уже выполнен', 'error');
                 return;
             }
 
-            // Имитация выполнения
+            questStatus[questId] = true;
+            saveQuestStatus();
+
             btn.textContent = '✓';
             btn.classList.add('done');
             card.classList.add('completed');
 
-            // Отправка в бота
+            const rewards = { 1: 1, 2: 3, 3: 6 };
+            const reward = rewards[questId] || 0;
+
             tg.sendData(JSON.stringify({
                 action: 'quest_done',
-                quest_id: id
+                quest_id: questId
             }));
 
-            // Обновляем баланс (пример)
-            const balance = document.querySelector('.balance');
-            const current = parseInt(balance.textContent.replace('🎰 ', ''));
-            const rewards = {1: 1, 2: 3, 3: 6};
-            balance.textContent = '🎰 ' + (current + rewards[id]);
+            const newSpins = parseInt(localStorage.getItem('antidot_spins') || 0) + reward;
+            updateLocalSpins(newSpins);
+
+            setStatus('✅ квест ' + questId + ' выполнен! +' + reward + ' рулеток', 'success');
         }
 
-        console.log('Antidot Mini App loaded!');
+        // ================================================
+        // СТАТУС
+        // ================================================
+        function setStatus(msg, type) {
+            const el = document.getElementById('statusMsg');
+            el.textContent = msg;
+            el.className = 'status-msg';
+            if (type) el.classList.add(type);
+        }
+
+        // ================================================
+        // ПРИ ЗАГРУЗКЕ
+        // ================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedSpins = localStorage.getItem('antidot_spins');
+            if (savedSpins) {
+                document.getElementById('spinCount').textContent = savedSpins;
+                document.getElementById('statSpins').textContent = savedSpins;
+            }
+
+            for (let i = 1; i <= 3; i++) {
+                if (questStatus[i]) {
+                    const card = document.getElementById('quest' + i);
+                    const btn = card.querySelector('.quest-btn');
+                    btn.textContent = '✓';
+                    btn.classList.add('done');
+                    card.classList.add('completed');
+                }
+            }
+
+            console.log('🍸 Antidot WebApp with Liquid Glass loaded!');
+            console.log('📦 LocalDB:', LocalDB.get('user'));
+        });
     </script>
 </body>
 </html>
