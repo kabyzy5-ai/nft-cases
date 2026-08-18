@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NFT Кейс 🔥</title>
+    <title>Antidot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -13,376 +13,352 @@
         }
 
         body {
-            font-family: -apple-system, system-ui, 'Helvetica Neue', sans-serif;
+            font-family: -apple-system, system-ui, sans-serif;
             background: #0a0a0a;
             color: #fff;
             min-height: 100vh;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        /* ===== ВЕРХНИЙ БАР ===== */
+        .header {
+            padding: 20px;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .header .logo {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .header .balance {
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        /* ===== КОНТЕНТ ===== */
+        .content {
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* ===== КВЕСТЫ ===== */
+        .quest-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.3s;
+        }
+
+        .quest-card.completed {
+            opacity: 0.4;
+            border-color: rgba(255,255,255,0.02);
+        }
+
+        .quest-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            transition: background 0.5s;
-            position: relative;
-            overflow: hidden;
+            flex-shrink: 0;
         }
 
-        /* ===== АНИМАЦИОННЫЙ ФОН ===== */
-        body::before {
-            content: '';
+        .quest-icon img {
+            width: 28px;
+            height: 28px;
+            filter: invert(1) brightness(0.8);
+        }
+
+        .quest-info {
+            flex: 1;
+        }
+
+        .quest-info .title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .quest-info .desc {
+            font-size: 12px;
+            opacity: 0.4;
+        }
+
+        .quest-reward {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #f7971e;
+        }
+
+        .quest-reward img {
+            width: 18px;
+            height: 18px;
+            filter: invert(1) brightness(0.8);
+        }
+
+        .quest-btn {
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: #fff;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .quest-btn:active {
+            transform: scale(0.94);
+        }
+
+        .quest-btn.done {
+            background: rgba(255,255,255,0.02);
+            opacity: 0.3;
+        }
+
+        /* ===== НИЖНЕЕ МЕНЮ ===== */
+        .bottom-menu {
             position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 30% 40%, rgba(255,255,255,0.03) 0%, transparent 60%),
-                radial-gradient(circle at 70% 80%, rgba(255,255,255,0.02) 0%, transparent 50%);
-            animation: bgMove 15s ease-in-out infinite alternate;
-            z-index: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
         }
 
-        @keyframes bgMove {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(5%, 5%) rotate(5deg); }
-        }
-
-        /* ===== КОНТЕЙНЕР ===== */
-        .container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 400px;
+        .menu-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 25px;
-        }
-
-        /* ===== ЗАГОЛОВОК ===== */
-        .title {
-            font-size: 14px;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            opacity: 0.3;
-            font-weight: 300;
-            animation: fadeInDown 1s ease;
-        }
-
-        /* ===== КЕЙС (ава) ===== */
-        .case-wrapper {
-            position: relative;
-            width: 220px;
-            height: 220px;
+            gap: 2px;
             cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 4px 12px;
+            transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .case-wrapper:active {
+        .menu-item:active {
             transform: scale(0.92);
         }
 
-        #caseImage {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.08);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-            transition: box-shadow 0.5s, filter 0.5s;
-            filter: grayscale(100%) brightness(0.7);
+        .menu-item img {
+            width: 26px;
+            height: 26px;
+            filter: invert(1) brightness(0.3);
+            transition: all 0.3s;
         }
 
-        #caseImage.unlocked {
-            filter: grayscale(0%) brightness(1);
-            box-shadow: 0 0 80px rgba(255,255,255,0.15);
+        .menu-item.active img {
+            filter: invert(1) brightness(1);
         }
 
-        /* ===== ТАЙМЕР ===== */
-        .timer-container {
+        .menu-item span {
+            font-size: 9px;
+            opacity: 0.3;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .menu-item.active span {
+            opacity: 0.8;
+        }
+
+        /* ===== СТРАНИЦЫ ===== */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== ГЛАВНАЯ ===== */
+        .welcome {
             text-align: center;
-            opacity: 0.6;
+            padding: 30px 0;
+        }
+
+        .welcome h2 {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            opacity: 0.3;
             font-size: 13px;
             letter-spacing: 2px;
-            font-weight: 300;
-        }
-
-        #timer {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            color: #fff;
-            margin-top: 5px;
-            font-variant-numeric: tabular-nums;
-        }
-
-        /* ===== КНОПКА (минималистичная) ===== */
-        .btn {
-            background: transparent;
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 16px 50px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: left 0.6s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn:active {
-            transform: scale(0.94);
-            border-color: rgba(255,255,255,0.3);
-        }
-
-        .btn:disabled {
-            opacity: 0.2;
-            transform: scale(1);
-            cursor: not-allowed;
-        }
-
-        /* ===== ВСПЫШКА ===== */
-        #flash {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            z-index: 9999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.05s;
-        }
-
-        #flash.active {
-            opacity: 1;
-            transition: opacity 0s;
-        }
-
-        /* ===== Анимации ===== */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-
-        .pulsing {
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        /* ===== Реферальная ссылка ===== */
-        .ref-link {
-            margin-top: 10px;
-            padding: 12px 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            font-size: 11px;
-            opacity: 0.3;
-            word-break: break-all;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.05);
-            width: 100%;
-            transition: opacity 0.5s;
-        }
-
-        .ref-link.revealed {
-            opacity: 0.6;
-            border-color: rgba(255,255,255,0.1);
-        }
-
-        /* ===== СТАТУС ===== */
-        #status {
-            font-size: 13px;
-            opacity: 0.4;
-            letter-spacing: 1px;
-            min-height: 24px;
-            transition: all 0.5s;
         }
     </style>
 </head>
 <body>
 
-    <!-- ВСПЫШКА -->
-    <div id="flash"></div>
+    <!-- ===== ВЕРХНИЙ БАР ===== -->
+    <div class="header">
+        <div class="logo">✦ ANTIDOT</div>
+        <div class="balance">🎰 0</div>
+    </div>
 
-    <div class="container">
-        <div class="title">✦ ЗАКРЫТЫЙ КЕЙС ✦</div>
+    <!-- ===== КОНТЕНТ ===== -->
+    <div class="content">
 
-        <div class="case-wrapper" id="caseWrapper">
-            <img id="caseImage" src="https://avatars.mds.yandex.net/i?id=97567c5eb5703dc49fb3cacf70bdbce6_l-5575082-images-thumbs&n=13" alt="Кейс">
+        <!-- ===== ГЛАВНАЯ ===== -->
+        <div class="page active" id="page-home">
+            <div class="welcome">
+                <h2>✦ КЕЙСЫ ✦</h2>
+                <p>открывай и получай награды</p>
+            </div>
+            <!-- Тут будет твой кейс -->
         </div>
 
-        <div class="timer-container">
-            <div>ДО РАЗБЛОКИРОВКИ</div>
-            <div id="timer">10:00</div>
+        <!-- ===== КВЕСТЫ ===== -->
+        <div class="page" id="page-quests">
+            <h3 style="margin-bottom:16px;font-weight:300;letter-spacing:2px;opacity:0.6;">✦ КВЕСТЫ</h3>
+
+            <!-- Квест 1 -->
+            <div class="quest-card" id="quest1">
+                <div class="quest-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968895.png" alt="tg">
+                </div>
+                <div class="quest-info">
+                    <div class="title">Подписаться на канал</div>
+                    <div class="desc">@AntidotChannel</div>
+                </div>
+                <div class="quest-reward">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1047/1047501.png" alt="reward">
+                    1
+                </div>
+                <button class="quest-btn" onclick="checkQuest(1)">→</button>
+            </div>
+
+            <!-- Квест 2 -->
+            <div class="quest-card" id="quest2">
+                <div class="quest-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968895.png" alt="tg">
+                </div>
+                <div class="quest-info">
+                    <div class="title">Зайти в чат</div>
+                    <div class="desc">@AntidotChat</div>
+                </div>
+                <div class="quest-reward">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1047/1047501.png" alt="reward">
+                    3
+                </div>
+                <button class="quest-btn" onclick="checkQuest(2)">→</button>
+            </div>
+
+            <!-- Квест 3 -->
+            <div class="quest-card" id="quest3">
+                <div class="quest-icon">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2838/2838912.png" alt="time">
+                </div>
+                <div class="quest-info">
+                    <div class="title">Подождать 1 час</div>
+                    <div class="desc">⏳ вернись через час</div>
+                </div>
+                <div class="quest-reward">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1047/1047501.png" alt="reward">
+                    6
+                </div>
+                <button class="quest-btn" onclick="checkQuest(3)">→</button>
+            </div>
         </div>
 
-        <button class="btn" id="openBtn">✧ ОТКРЫТЬ ✧</button>
+    </div>
 
-        <div id="status">Ожидание...</div>
-
-        <div class="ref-link" id="refLink">🔗 Твоя ссылка появится после открытия</div>
+    <!-- ===== НИЖНЕЕ МЕНЮ ===== -->
+    <div class="bottom-menu">
+        <div class="menu-item active" onclick="switchPage('home')">
+            <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="home">
+            <span>ГЛАВНАЯ</span>
+        </div>
+        <div class="menu-item" onclick="switchPage('quests')">
+            <img src="https://cdn-icons-png.flaticon.com/512/1047/1047524.png" alt="quests">
+            <span>КВЕСТЫ</span>
+        </div>
+        <div class="menu-item" onclick="switchPage('home')">
+            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="friends">
+            <span>ДРУЗЬЯ</span>
+        </div>
+        <div class="menu-item" onclick="switchPage('home')">
+            <img src="https://cdn-icons-png.flaticon.com/512/1374/1374393.png" alt="wallet">
+            <span>КОШЕЛЕК</span>
+        </div>
     </div>
 
     <script>
-        // ===== ИНИЦИАЛИЗАЦИЯ TELEGRAM =====
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
 
-        // ===== ЭЛЕМЕНТЫ =====
-        const caseImage = document.getElementById('caseImage');
-        const timerDisplay = document.getElementById('timer');
-        const openBtn = document.getElementById('openBtn');
-        const status = document.getElementById('status');
-        const refLink = document.getElementById('refLink');
-        const flash = document.getElementById('flash');
-        const caseWrapper = document.getElementById('caseWrapper');
+        // ===== ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ =====
+        function switchPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
 
-        // ===== ПЕРЕМЕННЫЕ =====
-        let timeLeft = 600; // 10 минут
-        let isUnlocked = false;
-        let timerInterval = null;
-
-        // ===== NFT (ПОЗЖЕ ДОБАВИШЬ) =====
-        const nftData = {
-            name: 'Meme God',
-            image: 'https://i.ibb.co/8d5KpNq/pepe-nft.png' // ВСТАВЬ СВОЮ РАБОЧУЮ ССЫЛКУ
-        };
-
-        // ===== ТАЙМЕР =====
-        function startTimer() {
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                const mins = Math.floor(timeLeft / 60);
-                const secs = timeLeft % 60;
-                timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    unlockCase();
-                }
-            }, 1000);
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.querySelector(`.menu-item:nth-child(${page === 'home' ? 1 : page === 'quests' ? 2 : 3})`).classList.add('active');
         }
 
-        // ===== РАЗБЛОКИРОВКА КЕЙСА =====
-        function unlockCase() {
-            isUnlocked = true;
-            caseImage.classList.add('unlocked');
-            timerDisplay.textContent = '✦ ГОТОВО ✦';
-            status.textContent = '🔓 Кейс разблокирован! Нажми "ОТКРЫТЬ"';
-            openBtn.disabled = false;
-            openBtn.style.borderColor = 'rgba(255,255,255,0.3)';
-        }
+        // ===== КВЕСТЫ (ПРОВЕРКА) =====
+        function checkQuest(id) {
+            const card = document.getElementById('quest' + id);
+            const btn = card.querySelector('.quest-btn');
 
-        // ===== ВСПЫШКА =====
-        function triggerFlash() {
-            flash.classList.add('active');
-            setTimeout(() => {
-                flash.classList.remove('active');
-            }, 200);
-        }
-
-        // ===== ОТКРЫТИЕ КЕЙСА =====
-        function openCase() {
-            if (!isUnlocked) {
-                status.textContent = '⏳ Подожди 10 минут!';
+            if (btn.classList.contains('done')) {
                 return;
             }
 
-            // ВСПЫШКА
-            triggerFlash();
+            // Имитация выполнения
+            btn.textContent = '✓';
+            btn.classList.add('done');
+            card.classList.add('completed');
 
-            // Меняем картинку на NFT
-            caseImage.src = nftData.image;
-            caseImage.style.borderRadius = '16px';
-            caseImage.style.objectFit = 'contain';
-            caseImage.style.background = '#0a0a0a';
-            caseImage.style.padding = '20px';
-
-            status.textContent = `🎉 Ты получил: ${nftData.name}!`;
-
-            // Отключаем кнопку
-            openBtn.disabled = true;
-            openBtn.textContent = '✓ ПОЛУЧЕНО';
-
-            // Показываем реферальную ссылку
-            showRefLink();
-
-            // Отправляем данные в Telegram бота
+            // Отправка в бота
             tg.sendData(JSON.stringify({
-                action: 'nft_claimed',
-                nft: nftData.name
+                action: 'quest_done',
+                quest_id: id
             }));
+
+            // Обновляем баланс (пример)
+            const balance = document.querySelector('.balance');
+            const current = parseInt(balance.textContent.replace('🎰 ', ''));
+            const rewards = {1: 1, 2: 3, 3: 6};
+            balance.textContent = '🎰 ' + (current + rewards[id]);
         }
 
-        // ===== РЕФЕРАЛЬНАЯ ССЫЛКА =====
-        function showRefLink() {
-            const botUsername = 'nft_cases_bot'; // ИМЯ ТВОЕГО БОТА
-            const userId = tg.initDataUnsafe?.user?.id || 'YOUR_ID';
-            const link = `https://t.me/${botUsername}?start=${userId}`;
-            
-            refLink.textContent = `🔗 Твоя реферальная ссылка (действует 30 минут): ${link}`;
-            refLink.classList.add('revealed');
-
-            // Таймер на 30 минут для ссылки
-            setTimeout(() => {
-                refLink.textContent = '⏳ Срок действия ссылки истёк';
-                refLink.style.opacity = '0.2';
-            }, 1800000); // 30 минут
-        }
-
-        // ===== СОБЫТИЯ =====
-        openBtn.addEventListener('click', openCase);
-
-        caseWrapper.addEventListener('click', function() {
-            if (isUnlocked) {
-                triggerFlash();
-                // Эффект "ослепления" при клике на кейс
-                setTimeout(() => {
-                    status.textContent = '✨ Кейс активирован!';
-                }, 100);
-            }
-        });
-
-        // ===== ЗАПУСК =====
-        startTimer();
-        status.textContent = '⏳ Ожидай 10 минут...';
-        openBtn.disabled = true;
-
-        // ===== ОТПРАВКА ДАННЫХ В БОТА =====
-        console.log('Мини-апп загружен!');
+        console.log('Antidot Mini App loaded!');
     </script>
 </body>
 </html>
