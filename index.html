@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Кейсы 🔥</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, system-ui;
+            background: #0f0f1a;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 32px;
+            margin: 30px 0 10px;
+            background: linear-gradient(45deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle {
+            opacity: 0.6;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .case-container {
+            width: 100%;
+            max-width: 360px;
+            background: #1a1a2e;
+            border-radius: 28px;
+            padding: 35px 20px;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+        }
+        .case-icon {
+            font-size: 90px;
+            display: block;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        #result {
+            font-size: 20px;
+            margin: 25px 0;
+            min-height: 65px;
+            font-weight: bold;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 14px;
+        }
+        .btn {
+            background: #f7971e;
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 18px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+            touch-action: manipulation;
+        }
+        .btn:active {
+            transform: scale(0.94);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+        }
+        .counter {
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.5;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 11px;
+            opacity: 0.2;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎁 КЕЙСЫ NFT</h1>
+    <p class="subtitle">Открой 3 кейса и получи супер-приз!</p>
+
+    <div class="case-container">
+        <span class="case-icon" id="caseIcon">📦</span>
+        <div id="result">Нажми кнопку!</div>
+        <button class="btn" id="openBtn">🔥 ОТКРЫТЬ</button>
+        <div class="counter" id="counter">Открыто: 0 / 3</div>
+    </div>
+
+    <div class="footer">🔥 Троллинг-бот | Не ведись на халяву</div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        const nfts = [
+            '🟢 Обычный Пепе',
+            '🔵 Редкий Пепе', 
+            '🟣 Эпический Пепе',
+            '🟠 Легендарный Пепе',
+            '🔴 Мифический Пепе'
+        ];
+
+        let opened = 0;
+        const maxOpens = 3;
+        const resultDiv = document.getElementById('result');
+        const counterDiv = document.getElementById('counter');
+        const btn = document.getElementById('openBtn');
+        const icon = document.getElementById('caseIcon');
+
+        btn.addEventListener('click', function() {
+            if (opened >= maxOpens) {
+                resultDiv.innerHTML = '🤡 ИДИ НАХУЙ!<br>ФРИ-НФТ ПОРТЯТ ЭКОНОМИКУ!';
+                btn.disabled = true;
+                btn.textContent = '🖕 ПРОЕБАЛ';
+                icon.textContent = '🤡';
+                tg.sendData(JSON.stringify({ action: 'final' }));
+                return;
+            }
+
+            const reward = nfts[Math.floor(Math.random() * nfts.length)];
+            opened++;
+            resultDiv.textContent = '🎉 ' + reward;
+            counterDiv.textContent = 'Открыто: ' + opened + ' / ' + maxOpens;
+
+            tg.sendData(JSON.stringify({
+                action: 'open_case',
+                reward: reward,
+                opened: opened
+            }));
+
+            if (opened >= maxOpens) {
+                setTimeout(() => {
+                    resultDiv.innerHTML = '💀 НАЖМИ ЕЩЕ РАЗ ДЛЯ СУПЕР-ПРИЗА!';
+                    btn.textContent = '🔥 ПОСЛЕДНИЙ КЕЙС';
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
