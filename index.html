@@ -6,14 +6,16 @@
     <title>Antidot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <!-- ================================================ -->
-    <!-- ШРИФТЫ (для настройки) -->
-    <!-- ================================================ -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-
+    <!-- ===== ШРИФТЫ (A Ц О С + MINECRAFT) ===== -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* ================================================
-           БАЗОВЫЕ ПЕРЕМЕННЫЕ
+           MINECRAFT ШРИФТ (через @import)
+           ================================================ */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        /* ================================================
+           ПЕРЕМЕННЫЕ
            ================================================ */
         :root {
             --bg-primary: #0a0a0a;
@@ -21,31 +23,35 @@
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.6);
             --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             --accent: #f7971e;
             --accent-gradient: linear-gradient(135deg, #f7971e, #ffd200);
             --font-family: 'Inter', -apple-system, system-ui, sans-serif;
             --animation-speed: 1s;
             --weather: 'none';
+            --glass-blur: blur(20px) saturate(180%);
         }
 
-        /* ===== ТЕМЫ ===== */
+        /* ================================================
+           ТЕМЫ (A Ц О С СТИЛЬ)
+           ================================================ */
         body.theme-dark {
             --bg-primary: #0a0a0a;
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.6);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
 
         body.theme-light {
             --bg-primary: #f5f5f7;
             --text-primary: #1a1a1a;
             --text-secondary: rgba(0, 0, 0, 0.5);
-            --glass-bg: rgba(255, 255, 255, 0.6);
-            --glass-border: rgba(0, 0, 0, 0.08);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(0, 0, 0, 0.06);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
         }
 
         body.theme-amoled {
@@ -53,17 +59,53 @@
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.5);
             --glass-bg: rgba(255, 255, 255, 0.02);
-            --glass-border: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.03);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
         }
 
         body.theme-forest {
             --bg-primary: #0d1a0d;
             --text-primary: #d4edda;
             --text-secondary: rgba(212, 237, 218, 0.6);
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.04);
             --accent: #28a745;
             --accent-gradient: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        /* ================================================
+           MINECRAFT ТЕМА
+           ================================================ */
+        body.theme-minecraft {
+            --bg-primary: #2d2d2d;
+            --text-primary: #b8b8b8;
+            --text-secondary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(0, 0, 0, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --font-family: 'Press Start 2P', monospace;
+            --accent: #7cb342;
+            --accent-gradient: linear-gradient(135deg, #7cb342, #558b2f);
+            --glass-blur: blur(4px);
+        }
+
+        body.theme-minecraft .glass {
+            border: 2px solid #5a5a5a;
+            border-radius: 4px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        body.theme-minecraft .glass::before,
+        body.theme-minecraft .glass::after {
+            display: none;
+        }
+
+        body.theme-minecraft .action-btn {
+            border-radius: 4px;
+            border: 2px solid #5a5a5a;
+            text-transform: uppercase;
+            letter-spacing: 0px;
+            font-size: 12px;
         }
 
         /* ================================================
@@ -73,6 +115,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -82,8 +125,11 @@
             min-height: 100vh;
             padding-bottom: 90px;
             overflow-x: hidden;
-            transition: background 0.6s ease, color 0.6s ease;
+            transition: background 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                        color 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* ================================================
@@ -153,19 +199,19 @@
         }
 
         /* ================================================
-           ВЕРХНИЙ БАР
+           ВЕРХНИЙ БАР (КАК У АЦОС)
            ================================================ */
         .header {
             padding: 20px 16px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--glass-border);
             position: sticky;
             top: 0;
             background: var(--bg-primary);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
             z-index: 50;
             transition: background 0.6s ease;
         }
@@ -195,6 +241,8 @@
             font-size: 14px;
             font-weight: 600;
             border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
         }
 
         .header .balance img {
@@ -215,21 +263,21 @@
         }
 
         /* ================================================
-           🍸 LIQUID GLASS (ГЛАВНАЯ МАГИЯ)
+           🍸 LIQUID GLASS (A Ц О С СТИЛЬ)
            ================================================ */
         .glass {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-            transition: all 0.4s ease;
+            box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
         }
 
-        /* ЖИДКИЙ БЛИК */
+        /* ЖИДКИЙ БЛИК (как у Apple) */
         .glass::before {
             content: '';
             position: absolute;
@@ -240,7 +288,7 @@
             background: radial-gradient(
                 circle at 30% 40%,
                 rgba(255, 255, 255, 0.12) 0%,
-                rgba(255, 255, 255, 0.04) 30%,
+                rgba(255, 255, 255, 0.03) 30%,
                 transparent 60%
             );
             animation: liquidFlow var(--animation-speed, 8s) ease-in-out infinite;
@@ -316,51 +364,17 @@
             z-index: 0;
         }
 
-        .glass .sparkle:nth-child(1) {
-            top: 15%;
-            left: 20%;
-            animation-delay: 0s;
-        }
-        .glass .sparkle:nth-child(2) {
-            top: 70%;
-            left: 75%;
-            animation-delay: 3s;
-            width: 5px;
-            height: 5px;
-        }
-        .glass .sparkle:nth-child(3) {
-            top: 40%;
-            left: 60%;
-            animation-delay: 6s;
-        }
-        .glass .sparkle:nth-child(4) {
-            top: 80%;
-            left: 25%;
-            animation-delay: 2s;
-            width: 3px;
-            height: 3px;
-        }
-        .glass .sparkle:nth-child(5) {
-            top: 25%;
-            left: 85%;
-            animation-delay: 5s;
-        }
+        .glass .sparkle:nth-child(1) { top: 15%; left: 20%; animation-delay: 0s; }
+        .glass .sparkle:nth-child(2) { top: 70%; left: 75%; animation-delay: 3s; width: 5px; height: 5px; }
+        .glass .sparkle:nth-child(3) { top: 40%; left: 60%; animation-delay: 6s; }
+        .glass .sparkle:nth-child(4) { top: 80%; left: 25%; animation-delay: 2s; width: 3px; height: 3px; }
+        .glass .sparkle:nth-child(5) { top: 25%; left: 85%; animation-delay: 5s; }
 
         @keyframes sparkleFloat {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0;
-            }
-            20% {
-                opacity: 1;
-            }
-            80% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(15px, -25px) scale(0);
-                opacity: 0;
-            }
+            0% { transform: translate(0, 0) scale(1); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translate(15px, -25px) scale(0); opacity: 0; }
         }
 
         .glass > * {
@@ -390,7 +404,7 @@
             align-items: center;
             gap: 14px;
             margin-bottom: 16px;
-            animation: slideUp 0.3s ease;
+            animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .profile-avatar {
@@ -446,7 +460,7 @@
            ================================================ */
         .page {
             display: none;
-            animation: fadeIn 0.35s ease;
+            animation: fadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .page.active {
@@ -454,25 +468,13 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(12px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ================================================
@@ -484,16 +486,12 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            transition: all 0.3s;
-            animation: slideUp 0.4s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .quest-card:nth-child(2) {
-            animation-delay: 0.05s;
-        }
-        .quest-card:nth-child(3) {
-            animation-delay: 0.1s;
-        }
+        .quest-card:nth-child(2) { animation-delay: 0.05s; }
+        .quest-card:nth-child(3) { animation-delay: 0.1s; }
 
         .quest-card.completed {
             opacity: 0.4;
@@ -509,6 +507,8 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
         }
 
         .quest-card .icon img {
@@ -555,8 +555,10 @@
             border-radius: 20px;
             font-size: 12px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             flex-shrink: 0;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
         }
 
         .quest-btn:active {
@@ -569,24 +571,26 @@
         }
 
         /* ================================================
-           КНОПКИ
+           КНОПКИ (A Ц О С СТИЛЬ)
            ================================================ */
         .action-btn {
             border: none;
             padding: 14px;
             border-radius: 14px;
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 600;
             width: 100%;
             cursor: pointer;
             margin-top: 10px;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             position: relative;
             overflow: hidden;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
         }
 
         .action-btn:active {
@@ -600,8 +604,8 @@
 
         .action-btn.glass {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px) saturate(200%);
-            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
             color: var(--text-primary);
         }
@@ -635,7 +639,7 @@
             opacity: 0.3;
             margin-top: 12px;
             padding: 8px;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .status-msg.success {
@@ -661,12 +665,13 @@
         }
 
         .settings-group .label {
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.4;
             letter-spacing: 2px;
             text-transform: uppercase;
             margin-bottom: 8px;
             display: block;
+            font-weight: 600;
         }
 
         .settings-option {
@@ -679,7 +684,9 @@
             border: 1px solid var(--glass-border);
             margin-bottom: 6px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
         }
 
         .settings-option:active {
@@ -697,7 +704,8 @@
         }
 
         .settings-option .left .text {
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 500;
         }
 
         .settings-option .check {
@@ -708,7 +716,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .settings-option.active .check {
@@ -730,7 +738,7 @@
         }
 
         /* ================================================
-           НИЖНЕЕ МЕНЮ
+           НИЖНЕЕ МЕНЮ (A Ц О С СТИЛЬ)
            ================================================ */
         .bottom-menu {
             position: fixed;
@@ -738,8 +746,8 @@
             left: 0;
             right: 0;
             background: var(--bg-primary);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
             border-top: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-around;
@@ -755,7 +763,7 @@
             gap: 2px;
             cursor: pointer;
             padding: 4px 12px;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -767,7 +775,7 @@
             width: 26px;
             height: 26px;
             filter: invert(1) brightness(0.3);
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .menu-item.active img {
@@ -778,7 +786,8 @@
             font-size: 9px;
             opacity: 0.3;
             letter-spacing: 1px;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            font-weight: 600;
         }
 
         .menu-item.active span {
@@ -789,12 +798,8 @@
            АДАПТИВ
            ================================================ */
         @media (max-width: 420px) {
-            .content {
-                padding: 12px;
-            }
-            .header {
-                padding: 16px 12px 10px;
-            }
+            .content { padding: 12px; }
+            .header { padding: 16px 12px 10px; }
         }
     </style>
 </head>
@@ -821,7 +826,6 @@
         <!-- ===== ГЛАВНАЯ ===== -->
         <div class="page active" id="page-home">
 
-            <!-- ПРОФИЛЬ -->
             <div class="profile-card glass">
                 <div class="sparkle"></div>
                 <div class="sparkle"></div>
@@ -847,18 +851,17 @@
                 ✦ ОТКРЫВАЙ КЕЙСЫ ✦
             </div>
 
-            <!-- ТЕСТОВАЯ КНОПКА -->
             <button class="action-btn glass" onclick="testConnection()">
                 <img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png" alt="test">
-                📡 ТЕСТ СВЯЗИ С БОТОМ
+                📡 ТЕСТ СВЯЗИ
             </button>
 
             <button class="action-btn glass" style="margin-top:8px;" onclick="getRefLink()">
-                🔗 ПОЛУЧИТЬ РЕФЕРАЛКУ
+                🔗 РЕФЕРАЛКА
             </button>
 
             <button class="action-btn primary" style="margin-top:8px;" onclick="getProfile()">
-                👤 МОЙ ПРОФИЛЬ
+                👤 ПРОФИЛЬ
             </button>
 
             <div class="status-msg" id="statusMsg">готов к работе</div>
@@ -921,99 +924,74 @@
         <div class="page" id="page-settings">
             <h3 style="margin-bottom:16px;font-weight:300;letter-spacing:2px;opacity:0.6;">✦ НАСТРОЙКИ</h3>
 
-            <!-- Шрифт -->
+            <!-- ШРИФТ -->
             <div class="settings-group">
                 <span class="label">Шрифт</span>
                 <div class="settings-option" onclick="setFont('inter')" data-font="inter">
-                    <div class="left">
-                        <span class="icon">🔤</span>
-                        <span class="text">Inter</span>
-                    </div>
+                    <div class="left"><span class="icon">🔤</span><span class="text">Inter</span></div>
                     <div class="check"></div>
                 </div>
                 <div class="settings-option" onclick="setFont('mono')" data-font="mono">
-                    <div class="left">
-                        <span class="icon">🔢</span>
-                        <span class="text">JetBrains Mono</span>
-                    </div>
+                    <div class="left"><span class="icon">🔢</span><span class="text">JetBrains Mono</span></div>
                     <div class="check"></div>
                 </div>
                 <div class="settings-option" onclick="setFont('serif')" data-font="serif">
-                    <div class="left">
-                        <span class="icon">✒️</span>
-                        <span class="text">Playfair Display</span>
-                    </div>
+                    <div class="left"><span class="icon">✒️</span><span class="text">Playfair Display</span></div>
+                    <div class="check"></div>
+                </div>
+                <div class="settings-option" onclick="setFont('minecraft')" data-font="minecraft">
+                    <div class="left"><span class="icon">⛏️</span><span class="text">Minecraft</span></div>
                     <div class="check"></div>
                 </div>
             </div>
 
-            <!-- Тема -->
+            <!-- ТЕМА -->
             <div class="settings-group">
                 <span class="label">Тема</span>
                 <div class="settings-option" onclick="setTheme('dark')" data-theme="dark">
-                    <div class="left">
-                        <span class="icon">🌙</span>
-                        <span class="text">Тёмная</span>
-                    </div>
+                    <div class="left"><span class="icon">🌙</span><span class="text">Тёмная</span></div>
                     <div class="check"></div>
                 </div>
                 <div class="settings-option" onclick="setTheme('light')" data-theme="light">
-                    <div class="left">
-                        <span class="icon">☀️</span>
-                        <span class="text">Светлая</span>
-                    </div>
+                    <div class="left"><span class="icon">☀️</span><span class="text">Светлая</span></div>
                     <div class="check"></div>
                 </div>
                 <div class="settings-option" onclick="setTheme('amoled')" data-theme="amoled">
-                    <div class="left">
-                        <span class="icon">⬛</span>
-                        <span class="text">AMOLED</span>
-                    </div>
+                    <div class="left"><span class="icon">⬛</span><span class="text">AMOLED</span></div>
                     <div class="check"></div>
                 </div>
                 <div class="settings-option" onclick="setTheme('forest')" data-theme="forest">
-                    <div class="left">
-                        <span class="icon">🌲</span>
-                        <span class="text">Лес</span>
-                    </div>
+                    <div class="left"><span class="icon">🌲</span><span class="text">Лес</span></div>
+                    <div class="check"></div>
+                </div>
+                <div class="settings-option" onclick="setTheme('minecraft')" data-theme="minecraft">
+                    <div class="left"><span class="icon">⛏️</span><span class="text">Minecraft</span></div>
                     <div class="check"></div>
                 </div>
             </div>
 
-            <!-- Погода -->
+            <!-- ПОГОДА -->
             <div class="settings-group">
                 <span class="label">Погода</span>
                 <div class="settings-option" onclick="setWeather('none')" data-weather="none">
-                    <div class="left">
-                        <span class="icon">☀️</span>
-                        <span class="text">Ясно</span>
-                    </div>
+                    <div class="left"><span class="icon">☀️</span><span class="text">Ясно</span></div>
                     <div class="check"></div>
                 </div>
                 <div class="settings-option" onclick="setWeather('snow')" data-weather="snow">
-                    <div class="left">
-                        <span class="icon">❄️</span>
-                        <span class="text">Снег</span>
-                    </div>
+                    <div class="left"><span class="icon">❄️</span><span class="text">Снег</span></div>
                     <div class="check"></div>
                 </div>
                 <div class="settings-option" onclick="setWeather('rain')" data-weather="rain">
-                    <div class="left">
-                        <span class="icon">🌧️</span>
-                        <span class="text">Дождь</span>
-                    </div>
+                    <div class="left"><span class="icon">🌧️</span><span class="text">Дождь</span></div>
                     <div class="check"></div>
                 </div>
             </div>
 
-            <!-- Анимации -->
+            <!-- АНИМАЦИИ -->
             <div class="settings-group">
                 <span class="label">Анимации</span>
                 <div class="settings-option" onclick="toggleAnimations()" id="animToggle">
-                    <div class="left">
-                        <span class="icon">✨</span>
-                        <span class="text">Включены</span>
-                    </div>
+                    <div class="left"><span class="icon">✨</span><span class="text">Включены</span></div>
                     <div class="check"></div>
                 </div>
             </div>
@@ -1118,19 +1096,20 @@
             el.textContent = msg;
             el.className = 'status-msg';
             if (type) el.classList.add(type);
-            setTimeout(() => { if (type !== 'error') { el.className = 'status-msg';
-                    el.textContent = 'готов к работе'; } }, 5000);
+            setTimeout(() => {
+                if (type !== 'error') { el.className = 'status-msg';
+                    el.textContent = 'готов к работе'; }
+            }, 5000);
         }
 
         // ================================================
-        // ТЕСТ СВЯЗИ (ОТПРАВЛЯЕТ В БОТА)
+        // ТЕСТ СВЯЗИ
         // ================================================
         function testConnection() {
-            const testData = {
+            tg.sendData(JSON.stringify({
                 action: 'test_connection',
                 test_data: 'Hello from WebApp! Time: ' + new Date().toLocaleTimeString()
-            };
-            tg.sendData(JSON.stringify(testData));
+            }));
             setStatus('📡 отправлено в бота...', 'info');
         }
 
@@ -1179,7 +1158,8 @@
             const fonts = {
                 inter: "'Inter', -apple-system, system-ui, sans-serif",
                 mono: "'JetBrains Mono', monospace",
-                serif: "'Playfair Display', serif"
+                serif: "'Playfair Display', serif",
+                minecraft: "'Press Start 2P', monospace"
             };
             document.documentElement.style.setProperty('--font-family', fonts[font]);
             LocalDB.set('font', font);
