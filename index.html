@@ -1,13 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Antidot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- ================================================ -->
+    <!-- ШРИФТЫ (для настройки) -->
+    <!-- ================================================ -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
         /* ================================================
-           БАЗОВЫЕ СТИЛИ
+           БАЗОВЫЕ ПЕРЕМЕННЫЕ
+           ================================================ */
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --accent: #f7971e;
+            --accent-gradient: linear-gradient(135deg, #f7971e, #ffd200);
+            --font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            --animation-speed: 1s;
+            --weather: 'none';
+        }
+
+        /* ===== ТЕМЫ ===== */
+        body.theme-dark {
+            --bg-primary: #0a0a0a;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body.theme-light {
+            --bg-primary: #f5f5f7;
+            --text-primary: #1a1a1a;
+            --text-secondary: rgba(0, 0, 0, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        body.theme-amoled {
+            --bg-primary: #000000;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.04);
+        }
+
+        body.theme-forest {
+            --bg-primary: #0d1a0d;
+            --text-primary: #d4edda;
+            --text-secondary: rgba(212, 237, 218, 0.6);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --accent: #28a745;
+            --accent-gradient: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        /* ================================================
+           ГЛОБАЛЬНЫЕ СТИЛИ
            ================================================ */
         * {
             margin: 0;
@@ -16,12 +76,80 @@
         }
 
         body {
-            font-family: -apple-system, system-ui, 'Helvetica Neue', sans-serif;
-            background: #0a0a0a;
-            color: #fff;
+            font-family: var(--font-family);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding-bottom: 90px;
             overflow-x: hidden;
+            transition: background 0.6s ease, color 0.6s ease;
+            position: relative;
+        }
+
+        /* ================================================
+           ПОГОДА (СНЕГ/ДОЖДЬ)
+           ================================================ */
+        .weather-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            animation: snowfall linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh + 20px)) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .raindrop {
+            position: absolute;
+            top: -20px;
+            width: 2px;
+            height: 20px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
+            animation: rain linear infinite;
+        }
+
+        @keyframes rain {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh + 20px));
+                opacity: 0;
+            }
         }
 
         /* ================================================
@@ -35,10 +163,11 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             position: sticky;
             top: 0;
-            background: rgba(10, 10, 10, 0.95);
+            background: var(--bg-primary);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             z-index: 50;
+            transition: background 0.6s ease;
         }
 
         .header .logo {
@@ -60,11 +189,12 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255, 255, 255, 0.06);
+            background: var(--glass-bg);
             padding: 6px 14px 6px 10px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 600;
+            border: 1px solid var(--glass-border);
         }
 
         .header .balance img {
@@ -80,10 +210,179 @@
             padding: 16px;
             max-width: 420px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         /* ================================================
-           ПРОФИЛЬ (GLASS)
+           🍸 LIQUID GLASS (ГЛАВНАЯ МАГИЯ)
+           ================================================ */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ЖИДКИЙ БЛИК */
+        .glass::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle at 30% 40%,
+                rgba(255, 255, 255, 0.12) 0%,
+                rgba(255, 255, 255, 0.04) 30%,
+                transparent 60%
+            );
+            animation: liquidFlow var(--animation-speed, 8s) ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glass::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            right: -20%;
+            width: 80%;
+            height: 60%;
+            background: radial-gradient(
+                circle at 70% 80%,
+                rgba(255, 255, 255, 0.06) 0%,
+                transparent 60%
+            );
+            animation: liquidFlow2 calc(var(--animation-speed, 8s) * 1.2) ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes liquidFlow {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                opacity: 0.6;
+            }
+            25% {
+                transform: translate(5%, 8%) scale(1.1) rotate(5deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-3%, 5%) scale(0.95) rotate(-3deg);
+                opacity: 0.7;
+            }
+            75% {
+                transform: translate(8%, -5%) scale(1.05) rotate(4deg);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes liquidFlow2 {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-10%, -15%) scale(1.3);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate(5%, 10%) scale(0.8);
+                opacity: 0.3;
+            }
+        }
+
+        /* МИКРО-БЛИКИ */
+        .glass .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: sparkleFloat calc(var(--animation-speed, 8s) * 1.5) ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glass .sparkle:nth-child(1) {
+            top: 15%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+        .glass .sparkle:nth-child(2) {
+            top: 70%;
+            left: 75%;
+            animation-delay: 3s;
+            width: 5px;
+            height: 5px;
+        }
+        .glass .sparkle:nth-child(3) {
+            top: 40%;
+            left: 60%;
+            animation-delay: 6s;
+        }
+        .glass .sparkle:nth-child(4) {
+            top: 80%;
+            left: 25%;
+            animation-delay: 2s;
+            width: 3px;
+            height: 3px;
+        }
+        .glass .sparkle:nth-child(5) {
+            top: 25%;
+            left: 85%;
+            animation-delay: 5s;
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(15px, -25px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .glass > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Отключение анимаций */
+        body.no-animations .glass::before,
+        body.no-animations .glass::after,
+        body.no-animations .glass .sparkle {
+            animation: none !important;
+            opacity: 0 !important;
+        }
+
+        body.no-animations .glass {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        /* ================================================
+           ПРОФИЛЬ
            ================================================ */
         .profile-card {
             padding: 16px;
@@ -92,15 +391,13 @@
             gap: 14px;
             margin-bottom: 16px;
             animation: slideUp 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
 
         .profile-avatar {
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #f7971e, #ffd200);
+            background: var(--accent-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -179,7 +476,7 @@
         }
 
         /* ================================================
-           КВЕСТЫ (GLASS)
+           КВЕСТЫ
            ================================================ */
         .quest-card {
             padding: 14px 16px;
@@ -189,8 +486,6 @@
             gap: 14px;
             transition: all 0.3s;
             animation: slideUp 0.4s ease;
-            position: relative;
-            overflow: hidden;
         }
 
         .quest-card:nth-child(2) {
@@ -209,7 +504,7 @@
             width: 42px;
             height: 42px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--glass-bg);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -243,7 +538,7 @@
             gap: 4px;
             font-size: 13px;
             font-weight: 600;
-            color: #f7971e;
+            color: var(--accent);
         }
 
         .quest-card .reward img {
@@ -253,9 +548,9 @@
         }
 
         .quest-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: none;
-            color: #fff;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
             padding: 6px 16px;
             border-radius: 20px;
             font-size: 12px;
@@ -290,6 +585,8 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            position: relative;
+            overflow: hidden;
         }
 
         .action-btn:active {
@@ -297,18 +594,16 @@
         }
 
         .action-btn.primary {
-            background: linear-gradient(135deg, #f7971e, #ffd200);
+            background: var(--accent-gradient);
             color: #0a0a0a;
         }
 
         .action-btn.glass {
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--glass-bg);
             backdrop-filter: blur(20px) saturate(200%);
             -webkit-backdrop-filter: blur(20px) saturate(200%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            position: relative;
-            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
         }
 
         .action-btn.glass:active {
@@ -324,6 +619,11 @@
 
         .action-btn.primary img {
             filter: invert(1) brightness(0.2);
+        }
+
+        .action-btn.success {
+            background: #22c55e;
+            color: #fff;
         }
 
         /* ================================================
@@ -354,186 +654,79 @@
         }
 
         /* ================================================
-           🍸 LIQUID GLASS ЭФФЕКТ (iOS 26)
+           НАСТРОЙКИ
            ================================================ */
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
+        .settings-group {
+            margin-bottom: 16px;
         }
 
-        /* ЖИДКИЙ БЛИК (основная магия) */
-        .glass::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(
-                circle at 30% 40%,
-                rgba(255, 255, 255, 0.15) 0%,
-                rgba(255, 255, 255, 0.05) 30%,
-                transparent 60%
-            );
-            animation: liquidFlow 8s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
+        .settings-group .label {
+            font-size: 12px;
+            opacity: 0.4;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: block;
         }
 
-        /* ВТОРОЙ БЛИК (отражение снизу) */
-        .glass::after {
-            content: '';
-            position: absolute;
-            bottom: -30%;
-            right: -20%;
-            width: 80%;
-            height: 60%;
-            background: radial-gradient(
-                circle at 70% 80%,
-                rgba(255, 255, 255, 0.08) 0%,
-                transparent 60%
-            );
-            animation: liquidFlow2 10s ease-in-out infinite alternate;
-            pointer-events: none;
-            z-index: 0;
+        .settings-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--glass-bg);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        /* АНИМАЦИЯ ДЛЯ БЛИКА 1 */
-        @keyframes liquidFlow {
-            0% {
-                transform: translate(0, 0) scale(1) rotate(0deg);
-                opacity: 0.6;
-            }
-            25% {
-                transform: translate(5%, 8%) scale(1.1) rotate(5deg);
-                opacity: 1;
-            }
-            50% {
-                transform: translate(-3%, 5%) scale(0.95) rotate(-3deg);
-                opacity: 0.7;
-            }
-            75% {
-                transform: translate(8%, -5%) scale(1.05) rotate(4deg);
-                opacity: 0.9;
-            }
-            100% {
-                transform: translate(0, 0) scale(1) rotate(0deg);
-                opacity: 0.6;
-            }
+        .settings-option:active {
+            transform: scale(0.98);
         }
 
-        /* АНИМАЦИЯ ДЛЯ БЛИКА 2 */
-        @keyframes liquidFlow2 {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.3;
-            }
-            50% {
-                transform: translate(-10%, -15%) scale(1.3);
-                opacity: 0.7;
-            }
-            100% {
-                transform: translate(5%, 10%) scale(0.8);
-                opacity: 0.3;
-            }
+        .settings-option .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        /* МИКРО-БЛИКИ (мелкие пузырьки/искры) */
-        .glass .sparkle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.4);
+        .settings-option .left .icon {
+            font-size: 18px;
+        }
+
+        .settings-option .left .text {
+            font-size: 14px;
+        }
+
+        .settings-option .check {
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            filter: blur(1px);
-            animation: sparkleFloat 12s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
         }
 
-        .glass .sparkle:nth-child(1) {
-            top: 15%;
-            left: 20%;
-            animation-delay: 0s;
-            width: 3px;
-            height: 3px;
+        .settings-option.active .check {
+            border-color: var(--accent);
+            background: var(--accent);
         }
 
-        .glass .sparkle:nth-child(2) {
-            top: 70%;
-            left: 75%;
-            animation-delay: 3s;
-            width: 5px;
-            height: 5px;
+        .settings-option.active .check::after {
+            content: '✓';
+            color: #0a0a0a;
+            font-size: 12px;
+            font-weight: 700;
         }
 
-        .glass .sparkle:nth-child(3) {
-            top: 40%;
-            left: 60%;
-            animation-delay: 6s;
-            width: 4px;
-            height: 4px;
-        }
-
-        .glass .sparkle:nth-child(4) {
-            top: 80%;
-            left: 25%;
-            animation-delay: 2s;
-            width: 3px;
-            height: 3px;
-        }
-
-        .glass .sparkle:nth-child(5) {
-            top: 25%;
-            left: 85%;
-            animation-delay: 5s;
-            width: 4px;
-            height: 4px;
-        }
-
-        @keyframes sparkleFloat {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0;
-            }
-            20% {
-                opacity: 1;
-            }
-            80% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(15px, -25px) scale(0);
-                opacity: 0;
-            }
-        }
-
-        /* ХОВЕР ЭФФЕКТ — стекло "оживает" */
-        .glass:hover {
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 
-                0 8px 40px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                0 0 60px rgba(255, 255, 255, 0.03);
-        }
-
-        .glass:hover::before {
-            animation-duration: 4s;
-        }
-
-        /* Контент внутри стекла должен быть поверх анимации */
-        .glass > * {
-            position: relative;
-            z-index: 1;
+        .settings-option .value {
+            font-size: 14px;
+            opacity: 0.6;
+            font-weight: 600;
         }
 
         /* ================================================
@@ -544,14 +737,15 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(10, 10, 10, 0.95);
+            background: var(--bg-primary);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-around;
             padding: 8px 0 12px;
             z-index: 100;
+            transition: background 0.6s ease;
         }
 
         .menu-item {
@@ -590,9 +784,24 @@
         .menu-item.active span {
             opacity: 0.8;
         }
+
+        /* ================================================
+           АДАПТИВ
+           ================================================ */
+        @media (max-width: 420px) {
+            .content {
+                padding: 12px;
+            }
+            .header {
+                padding: 16px 12px 10px;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <!-- ===== ПОГОДА ===== -->
+    <div class="weather-container" id="weatherContainer"></div>
 
     <!-- ===== ВЕРХНИЙ БАР ===== -->
     <div class="header">
@@ -612,15 +821,11 @@
         <!-- ===== ГЛАВНАЯ ===== -->
         <div class="page active" id="page-home">
 
-            <!-- ПРОФИЛЬ С GLASS-ЭФФЕКТОМ -->
+            <!-- ПРОФИЛЬ -->
             <div class="profile-card glass">
-                <!-- МИКРО-БЛИКИ -->
                 <div class="sparkle"></div>
                 <div class="sparkle"></div>
                 <div class="sparkle"></div>
-                <div class="sparkle"></div>
-                <div class="sparkle"></div>
-
                 <div class="profile-avatar" id="avatarLetter">👤</div>
                 <div class="profile-info">
                     <div class="name" id="userName">Загрузка...</div>
@@ -642,7 +847,7 @@
                 ✦ ОТКРЫВАЙ КЕЙСЫ ✦
             </div>
 
-            <!-- ТЕСТОВАЯ КНОПКА (GLASS) -->
+            <!-- ТЕСТОВАЯ КНОПКА -->
             <button class="action-btn glass" onclick="testConnection()">
                 <img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png" alt="test">
                 📡 ТЕСТ СВЯЗИ С БОТОМ
@@ -663,9 +868,7 @@
         <div class="page" id="page-quests">
             <h3 style="margin-bottom:16px;font-weight:300;letter-spacing:2px;opacity:0.6;">✦ КВЕСТЫ</h3>
 
-            <!-- Квест 1 -->
             <div class="quest-card glass" id="quest1">
-                <div class="sparkle"></div>
                 <div class="sparkle"></div>
                 <div class="icon">
                     <img src="https://cdn-icons-png.flaticon.com/512/5968/5968895.png" alt="tg">
@@ -681,9 +884,7 @@
                 <button class="quest-btn" onclick="doQuest(1)">→</button>
             </div>
 
-            <!-- Квест 2 -->
             <div class="quest-card glass" id="quest2">
-                <div class="sparkle"></div>
                 <div class="sparkle"></div>
                 <div class="icon">
                     <img src="https://cdn-icons-png.flaticon.com/512/5968/5968895.png" alt="tg">
@@ -699,9 +900,7 @@
                 <button class="quest-btn" onclick="doQuest(2)">→</button>
             </div>
 
-            <!-- Квест 3 -->
             <div class="quest-card glass" id="quest3">
-                <div class="sparkle"></div>
                 <div class="sparkle"></div>
                 <div class="icon">
                     <img src="https://cdn-icons-png.flaticon.com/512/2838/2838912.png" alt="time">
@@ -718,6 +917,108 @@
             </div>
         </div>
 
+        <!-- ===== НАСТРОЙКИ ===== -->
+        <div class="page" id="page-settings">
+            <h3 style="margin-bottom:16px;font-weight:300;letter-spacing:2px;opacity:0.6;">✦ НАСТРОЙКИ</h3>
+
+            <!-- Шрифт -->
+            <div class="settings-group">
+                <span class="label">Шрифт</span>
+                <div class="settings-option" onclick="setFont('inter')" data-font="inter">
+                    <div class="left">
+                        <span class="icon">🔤</span>
+                        <span class="text">Inter</span>
+                    </div>
+                    <div class="check"></div>
+                </div>
+                <div class="settings-option" onclick="setFont('mono')" data-font="mono">
+                    <div class="left">
+                        <span class="icon">🔢</span>
+                        <span class="text">JetBrains Mono</span>
+                    </div>
+                    <div class="check"></div>
+                </div>
+                <div class="settings-option" onclick="setFont('serif')" data-font="serif">
+                    <div class="left">
+                        <span class="icon">✒️</span>
+                        <span class="text">Playfair Display</span>
+                    </div>
+                    <div class="check"></div>
+                </div>
+            </div>
+
+            <!-- Тема -->
+            <div class="settings-group">
+                <span class="label">Тема</span>
+                <div class="settings-option" onclick="setTheme('dark')" data-theme="dark">
+                    <div class="left">
+                        <span class="icon">🌙</span>
+                        <span class="text">Тёмная</span>
+                    </div>
+                    <div class="check"></div>
+                </div>
+                <div class="settings-option" onclick="setTheme('light')" data-theme="light">
+                    <div class="left">
+                        <span class="icon">☀️</span>
+                        <span class="text">Светлая</span>
+                    </div>
+                    <div class="check"></div>
+                </div>
+                <div class="settings-option" onclick="setTheme('amoled')" data-theme="amoled">
+                    <div class="left">
+                        <span class="icon">⬛</span>
+                        <span class="text">AMOLED</span>
+                    </div>
+                    <div class="check"></div>
+                </div>
+                <div class="settings-option" onclick="setTheme('forest')" data-theme="forest">
+                    <div class="left">
+                        <span class="icon">🌲</span>
+                        <span class="text">Лес</span>
+                    </div>
+                    <div class="check"></div>
+                </div>
+            </div>
+
+            <!-- Погода -->
+            <div class="settings-group">
+                <span class="label">Погода</span>
+                <div class="settings-option" onclick="setWeather('none')" data-weather="none">
+                    <div class="left">
+                        <span class="icon">☀️</span>
+                        <span class="text">Ясно</span>
+                    </div>
+                    <div class="check"></div>
+                </div>
+                <div class="settings-option" onclick="setWeather('snow')" data-weather="snow">
+                    <div class="left">
+                        <span class="icon">❄️</span>
+                        <span class="text">Снег</span>
+                    </div>
+                    <div class="check"></div>
+                </div>
+                <div class="settings-option" onclick="setWeather('rain')" data-weather="rain">
+                    <div class="left">
+                        <span class="icon">🌧️</span>
+                        <span class="text">Дождь</span>
+                    </div>
+                    <div class="check"></div>
+                </div>
+            </div>
+
+            <!-- Анимации -->
+            <div class="settings-group">
+                <span class="label">Анимации</span>
+                <div class="settings-option" onclick="toggleAnimations()" id="animToggle">
+                    <div class="left">
+                        <span class="icon">✨</span>
+                        <span class="text">Включены</span>
+                    </div>
+                    <div class="check"></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- ===== НИЖНЕЕ МЕНЮ ===== -->
@@ -730,22 +1031,26 @@
             <img src="https://cdn-icons-png.flaticon.com/512/54/54702.png" alt="quests">
             <span>КВЕСТЫ</span>
         </div>
+        <div class="menu-item" onclick="switchPage('settings')">
+            <img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png" alt="settings">
+            <span>НАСТРОЙКИ</span>
+        </div>
         <div class="menu-item" onclick="getProfile()">
-            <img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png" alt="profile">
+            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="profile">
             <span>ПРОФИЛЬ</span>
         </div>
     </div>
 
-    <!-- ================================================
-    JAVASCRIPT
-    ================================================ -->
+    <!-- ================================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ================================================ -->
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
 
         // ================================================
-        // ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
+        // ПОЛЬЗОВАТЕЛЬ
         // ================================================
         let userData = {};
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
@@ -754,37 +1059,22 @@
                 id: user.id,
                 firstName: user.first_name || 'User',
                 lastName: user.last_name || '',
-                username: user.username || 'username',
-                photoUrl: user.photo_url || ''
+                username: user.username || 'username'
             };
-
             document.getElementById('userName').textContent = userData.firstName + ' ' + userData.lastName;
             document.getElementById('userTag').textContent = '@' + userData.username;
             document.getElementById('avatarLetter').textContent = userData.firstName.charAt(0).toUpperCase();
         }
 
         // ================================================
-        // ЛОКАЛЬНАЯ БД (localStorage)
+        // LOCALDB
         // ================================================
         const LocalDB = {
             set(key, data) {
-                try {
-                    localStorage.setItem('antidot_' + key, JSON.stringify(data));
-                } catch (e) {
-                    console.warn('LocalStorage save error:', e);
-                }
+                try { localStorage.setItem('antidot_' + key, JSON.stringify(data)); } catch (e) {}
             },
             get(key) {
-                try {
-                    const data = localStorage.getItem('antidot_' + key);
-                    return data ? JSON.parse(data) : null;
-                } catch (e) {
-                    console.warn('LocalStorage get error:', e);
-                    return null;
-                }
-            },
-            remove(key) {
-                localStorage.removeItem('antidot_' + key);
+                try { return JSON.parse(localStorage.getItem('antidot_' + key)); } catch (e) { return null; }
             }
         };
 
@@ -793,13 +1083,9 @@
         // ================================================
         const questStatus = { 1: false, 2: false, 3: false };
         const savedQuests = LocalDB.get('quests');
-        if (savedQuests) {
-            Object.assign(questStatus, savedQuests);
-        }
+        if (savedQuests) Object.assign(questStatus, savedQuests);
 
-        function saveQuestStatus() {
-            LocalDB.set('quests', questStatus);
-        }
+        function saveQuestStatus() { LocalDB.set('quests', questStatus); }
 
         // ================================================
         // БАЛАНС
@@ -814,84 +1100,14 @@
         }
 
         // ================================================
-        // ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
+        // СТРАНИЦЫ
         // ================================================
         function switchPage(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + page).classList.add('active');
-
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-            const map = { home: 0, quests: 1 };
+            const map = { home: 0, quests: 1, settings: 2 };
             document.querySelectorAll('.menu-item')[map[page] || 0].classList.add('active');
-
-            if (page === 'home') {
-                getProfile();
-            }
-        }
-
-        // ================================================
-        // ЗАПРОС ПРОФИЛЯ
-        // ================================================
-        function getProfile() {
-            tg.sendData(JSON.stringify({
-                action: 'get_profile'
-            }));
-            setStatus('⏳ запрос профиля...', 'info');
-        }
-
-        // ================================================
-        // ТЕСТ СВЯЗИ
-        // ================================================
-        function testConnection() {
-            const testData = {
-                action: 'test_connection',
-                test_data: 'Hello from WebApp! Time: ' + new Date().toLocaleTimeString()
-            };
-            tg.sendData(JSON.stringify(testData));
-            setStatus('📡 тест отправлен...', 'info');
-        }
-
-        // ================================================
-        // ПОЛУЧИТЬ РЕФЕРАЛКУ
-        // ================================================
-        function getRefLink() {
-            tg.sendData(JSON.stringify({
-                action: 'get_ref_link'
-            }));
-            setStatus('🔗 запрос ссылки...', 'info');
-        }
-
-        // ================================================
-        // КВЕСТ
-        // ================================================
-        function doQuest(questId) {
-            const card = document.getElementById('quest' + questId);
-            const btn = card.querySelector('.quest-btn');
-
-            if (questStatus[questId]) {
-                setStatus('❌ квест уже выполнен', 'error');
-                return;
-            }
-
-            questStatus[questId] = true;
-            saveQuestStatus();
-
-            btn.textContent = '✓';
-            btn.classList.add('done');
-            card.classList.add('completed');
-
-            const rewards = { 1: 1, 2: 3, 3: 6 };
-            const reward = rewards[questId] || 0;
-
-            tg.sendData(JSON.stringify({
-                action: 'quest_done',
-                quest_id: questId
-            }));
-
-            const newSpins = parseInt(localStorage.getItem('antidot_spins') || 0) + reward;
-            updateLocalSpins(newSpins);
-
-            setStatus('✅ квест ' + questId + ' выполнен! +' + reward + ' рулеток', 'success');
         }
 
         // ================================================
@@ -902,10 +1118,145 @@
             el.textContent = msg;
             el.className = 'status-msg';
             if (type) el.classList.add(type);
+            setTimeout(() => { if (type !== 'error') { el.className = 'status-msg';
+                    el.textContent = 'готов к работе'; } }, 5000);
         }
 
         // ================================================
-        // ПРИ ЗАГРУЗКЕ
+        // ТЕСТ СВЯЗИ (ОТПРАВЛЯЕТ В БОТА)
+        // ================================================
+        function testConnection() {
+            const testData = {
+                action: 'test_connection',
+                test_data: 'Hello from WebApp! Time: ' + new Date().toLocaleTimeString()
+            };
+            tg.sendData(JSON.stringify(testData));
+            setStatus('📡 отправлено в бота...', 'info');
+        }
+
+        // ================================================
+        // РЕФЕРАЛКА
+        // ================================================
+        function getRefLink() {
+            tg.sendData(JSON.stringify({ action: 'get_ref_link' }));
+            setStatus('🔗 запрос ссылки...', 'info');
+        }
+
+        // ================================================
+        // ПРОФИЛЬ
+        // ================================================
+        function getProfile() {
+            tg.sendData(JSON.stringify({ action: 'get_profile' }));
+            setStatus('⏳ запрос профиля...', 'info');
+        }
+
+        // ================================================
+        // КВЕСТ
+        // ================================================
+        function doQuest(questId) {
+            const card = document.getElementById('quest' + questId);
+            const btn = card.querySelector('.quest-btn');
+            if (questStatus[questId]) { setStatus('❌ уже выполнено', 'error'); return; }
+            questStatus[questId] = true;
+            saveQuestStatus();
+            btn.textContent = '✓';
+            btn.classList.add('done');
+            card.classList.add('completed');
+            const rewards = { 1: 1, 2: 3, 3: 6 };
+            const reward = rewards[questId] || 0;
+            tg.sendData(JSON.stringify({ action: 'quest_done', quest_id: questId }));
+            const newSpins = parseInt(localStorage.getItem('antidot_spins') || 0) + reward;
+            updateLocalSpins(newSpins);
+            setStatus('✅ +' + reward + ' рулеток', 'success');
+        }
+
+        // ================================================
+        // НАСТРОЙКИ
+        // ================================================
+
+        // ----- Шрифт -----
+        function setFont(font) {
+            const fonts = {
+                inter: "'Inter', -apple-system, system-ui, sans-serif",
+                mono: "'JetBrains Mono', monospace",
+                serif: "'Playfair Display', serif"
+            };
+            document.documentElement.style.setProperty('--font-family', fonts[font]);
+            LocalDB.set('font', font);
+            document.querySelectorAll('.settings-option[data-font]').forEach(el => {
+                el.classList.toggle('active', el.dataset.font === font);
+            });
+        }
+
+        // ----- Тема -----
+        function setTheme(theme) {
+            document.body.className = 'theme-' + theme;
+            LocalDB.set('theme', theme);
+            document.querySelectorAll('.settings-option[data-theme]').forEach(el => {
+                el.classList.toggle('active', el.dataset.theme === theme);
+            });
+        }
+
+        // ----- Погода -----
+        function setWeather(type) {
+            const container = document.getElementById('weatherContainer');
+            container.innerHTML = '';
+            document.querySelectorAll('.settings-option[data-weather]').forEach(el => {
+                el.classList.toggle('active', el.dataset.weather === type);
+            });
+            if (type === 'none') return;
+            const count = type === 'snow' ? 40 : 30;
+            const emoji = type === 'snow' ? '❄️' : '💧';
+            const className = type === 'snow' ? 'snowflake' : 'raindrop';
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+                el.className = className;
+                el.textContent = type === 'snow' ? emoji : '';
+                el.style.left = Math.random() * 100 + '%';
+                el.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                el.style.animationDelay = (Math.random() * 8) + 's';
+                el.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                if (type === 'rain') {
+                    el.style.height = (Math.random() * 15 + 10) + 'px';
+                    el.style.opacity = Math.random() * 0.4 + 0.1;
+                }
+                container.appendChild(el);
+            }
+            LocalDB.set('weather', type);
+        }
+
+        // ----- Анимации -----
+        function toggleAnimations() {
+            const isOff = document.body.classList.toggle('no-animations');
+            const toggle = document.getElementById('animToggle');
+            const text = toggle.querySelector('.text');
+            const check = toggle.querySelector('.check');
+            text.textContent = isOff ? 'Выключены' : 'Включены';
+            toggle.classList.toggle('active', !isOff);
+            LocalDB.set('animations', isOff ? 'off' : 'on');
+        }
+
+        // ================================================
+        // ЗАГРУЗКА СОХРАНЕННЫХ НАСТРОЕК
+        // ================================================
+        function loadSettings() {
+            const font = LocalDB.get('font') || 'inter';
+            setFont(font);
+            const theme = LocalDB.get('theme') || 'dark';
+            setTheme(theme);
+            const weather = LocalDB.get('weather') || 'none';
+            setWeather(weather);
+            const anim = LocalDB.get('animations') || 'on';
+            if (anim === 'off') {
+                document.body.classList.add('no-animations');
+                const toggle = document.getElementById('animToggle');
+                toggle.querySelector('.text').textContent = 'Выключены';
+                toggle.classList.remove('active');
+            }
+        }
+
+        // ================================================
+        // ЗАГРУЗКА ПРИ СТАРТЕ
         // ================================================
         document.addEventListener('DOMContentLoaded', function() {
             const savedSpins = localStorage.getItem('antidot_spins');
@@ -913,7 +1264,6 @@
                 document.getElementById('spinCount').textContent = savedSpins;
                 document.getElementById('statSpins').textContent = savedSpins;
             }
-
             for (let i = 1; i <= 3; i++) {
                 if (questStatus[i]) {
                     const card = document.getElementById('quest' + i);
@@ -923,10 +1273,10 @@
                     card.classList.add('completed');
                 }
             }
-
-            console.log('🍸 Antidot WebApp with Liquid Glass loaded!');
-            console.log('📦 LocalDB:', LocalDB.get('user'));
+            loadSettings();
+            console.log('🍸 Antidot с Liquid Glass загружен!');
         });
     </script>
+
 </body>
 </html>
