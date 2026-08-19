@@ -6,12 +6,10 @@
     <title>Antidot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <!-- ===== ШРИФТЫ (A Ц О С + MINECRAFT) ===== -->
+    <!-- ===== ШРИФТЫ ===== -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* ================================================
-           MINECRAFT ШРИФТ (через @import)
-           ================================================ */
+        /* MINECRAFT ШРИФТ */
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
         /* ================================================
@@ -19,69 +17,70 @@
            ================================================ */
         :root {
             --bg-primary: #0a0a0a;
-            --bg-secondary: rgba(255, 255, 255, 0.03);
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.6);
             --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-border-top: rgba(255, 255, 255, 0.25);
+            --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
             --accent: #f7971e;
             --accent-gradient: linear-gradient(135deg, #f7971e, #ffd200);
             --font-family: 'Inter', -apple-system, system-ui, sans-serif;
-            --animation-speed: 1s;
-            --weather: 'none';
+            --animation-speed: 6s;
             --glass-blur: blur(20px) saturate(180%);
         }
 
         /* ================================================
-           ТЕМЫ (A Ц О С СТИЛЬ)
+           ТЕМЫ
            ================================================ */
         body.theme-dark {
             --bg-primary: #0a0a0a;
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.6);
-            --glass-bg: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.06);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-border-top: rgba(255, 255, 255, 0.22);
+            --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
         }
 
         body.theme-light {
             --bg-primary: #f5f5f7;
             --text-primary: #1a1a1a;
             --text-secondary: rgba(0, 0, 0, 0.5);
-            --glass-bg: rgba(255, 255, 255, 0.5);
-            --glass-border: rgba(0, 0, 0, 0.06);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --glass-border-top: rgba(0, 0, 0, 0.15);
+            --glass-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
         }
 
         body.theme-amoled {
             --bg-primary: #000000;
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.5);
-            --glass-bg: rgba(255, 255, 255, 0.02);
-            --glass-border: rgba(255, 255, 255, 0.03);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-border-top: rgba(255, 255, 255, 0.15);
+            --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
         }
 
         body.theme-forest {
             --bg-primary: #0d1a0d;
             --text-primary: #d4edda;
             --text-secondary: rgba(212, 237, 218, 0.6);
-            --glass-bg: rgba(255, 255, 255, 0.02);
-            --glass-border: rgba(255, 255, 255, 0.04);
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-top: rgba(255, 255, 255, 0.18);
             --accent: #28a745;
             --accent-gradient: linear-gradient(135deg, #28a745, #20c997);
         }
 
-        /* ================================================
-           MINECRAFT ТЕМА
-           ================================================ */
         body.theme-minecraft {
             --bg-primary: #2d2d2d;
             --text-primary: #b8b8b8;
             --text-secondary: rgba(255, 255, 255, 0.5);
             --glass-bg: rgba(0, 0, 0, 0.3);
             --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-top: rgba(255, 255, 255, 0.15);
             --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
             --font-family: 'Press Start 2P', monospace;
             --accent: #7cb342;
@@ -98,14 +97,6 @@
         body.theme-minecraft .glass::before,
         body.theme-minecraft .glass::after {
             display: none;
-        }
-
-        body.theme-minecraft .action-btn {
-            border-radius: 4px;
-            border: 2px solid #5a5a5a;
-            text-transform: uppercase;
-            letter-spacing: 0px;
-            font-size: 12px;
         }
 
         /* ================================================
@@ -125,15 +116,13 @@
             min-height: 100vh;
             padding-bottom: 90px;
             overflow-x: hidden;
-            transition: background 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
-                        color 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: background 0.6s ease, color 0.6s ease;
             position: relative;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         /* ================================================
-           ПОГОДА (СНЕГ/ДОЖДЬ)
+           ПОГОДА
            ================================================ */
         .weather-container {
             position: fixed;
@@ -156,20 +145,10 @@
         }
 
         @keyframes snowfall {
-            0% {
-                transform: translateY(-10px) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(calc(100vh + 20px)) rotate(720deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(calc(100vh + 20px)) rotate(720deg); opacity: 0; }
         }
 
         .raindrop {
@@ -182,24 +161,14 @@
         }
 
         @keyframes rain {
-            0% {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(calc(100vh + 20px));
-                opacity: 0;
-            }
+            0% { transform: translateY(-20px); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(calc(100vh + 20px)); opacity: 0; }
         }
 
         /* ================================================
-           ВЕРХНИЙ БАР (КАК У АЦОС)
+           ВЕРХНИЙ БАР
            ================================================ */
         .header {
             padding: 20px 16px 12px;
@@ -217,7 +186,7 @@
         }
 
         .header .logo {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             letter-spacing: 2px;
             display: flex;
@@ -226,8 +195,8 @@
         }
 
         .header .logo img {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             filter: invert(1) brightness(0.8);
         }
 
@@ -238,7 +207,7 @@
             background: var(--glass-bg);
             padding: 6px 14px 6px 10px;
             border-radius: 20px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             border: 1px solid var(--glass-border);
             backdrop-filter: var(--glass-blur);
@@ -246,8 +215,8 @@
         }
 
         .header .balance img {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             filter: invert(1) brightness(0.8);
         }
 
@@ -263,35 +232,36 @@
         }
 
         /* ================================================
-           🍸 LIQUID GLASS (A Ц О С СТИЛЬ)
+           LIQUID GLASS
            ================================================ */
         .glass {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--glass-border-top);
+            border-left: 1px solid var(--glass-border-top);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
         }
 
-        /* ЖИДКИЙ БЛИК (как у Apple) */
         .glass::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            top: -60%;
+            left: -60%;
+            width: 220%;
+            height: 220%;
             background: radial-gradient(
-                circle at 30% 40%,
-                rgba(255, 255, 255, 0.12) 0%,
-                rgba(255, 255, 255, 0.03) 30%,
-                transparent 60%
+                circle at 35% 35%,
+                rgba(255, 255, 255, 0.16) 0%,
+                rgba(255, 255, 255, 0.04) 35%,
+                transparent 65%
             );
-            animation: liquidFlow var(--animation-speed, 8s) ease-in-out infinite;
+            animation: liquidFlow var(--animation-speed, 6s) ease-in-out infinite;
             pointer-events: none;
             z-index: 0;
         }
@@ -299,100 +269,59 @@
         .glass::after {
             content: '';
             position: absolute;
-            bottom: -30%;
-            right: -20%;
-            width: 80%;
-            height: 60%;
+            bottom: -40%;
+            right: -30%;
+            width: 90%;
+            height: 70%;
             background: radial-gradient(
-                circle at 70% 80%,
-                rgba(255, 255, 255, 0.06) 0%,
+                circle at 75% 75%,
+                rgba(247, 151, 30, 0.08) 0%,
                 transparent 60%
             );
-            animation: liquidFlow2 calc(var(--animation-speed, 8s) * 1.2) ease-in-out infinite alternate;
+            animation: liquidFlow2 calc(var(--animation-speed, 6s) * 1.3) ease-in-out infinite alternate;
             pointer-events: none;
             z-index: 0;
         }
 
         @keyframes liquidFlow {
-            0% {
-                transform: translate(0, 0) scale(1) rotate(0deg);
-                opacity: 0.6;
-            }
-            25% {
-                transform: translate(5%, 8%) scale(1.1) rotate(5deg);
-                opacity: 1;
-            }
-            50% {
-                transform: translate(-3%, 5%) scale(0.95) rotate(-3deg);
-                opacity: 0.7;
-            }
-            75% {
-                transform: translate(8%, -5%) scale(1.05) rotate(4deg);
-                opacity: 0.9;
-            }
-            100% {
-                transform: translate(0, 0) scale(1) rotate(0deg);
-                opacity: 0.6;
-            }
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.7; }
+            33% { transform: translate(6%, 10%) scale(1.15) rotate(6deg); opacity: 1; }
+            66% { transform: translate(-5%, 4%) scale(0.9) rotate(-4deg); opacity: 0.8; }
+            100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.7; }
         }
 
         @keyframes liquidFlow2 {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.3;
-            }
-            50% {
-                transform: translate(-10%, -15%) scale(1.3);
-                opacity: 0.7;
-            }
-            100% {
-                transform: translate(5%, 10%) scale(0.8);
-                opacity: 0.3;
-            }
+            0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            50% { transform: translate(-12%, -18%) scale(1.35); opacity: 0.8; }
+            100% { transform: translate(6%, 12%) scale(0.85); opacity: 0.4; }
         }
 
-        /* МИКРО-БЛИКИ */
         .glass .sparkle {
             position: absolute;
             width: 4px;
             height: 4px;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.6);
             border-radius: 50%;
-            filter: blur(1px);
-            animation: sparkleFloat calc(var(--animation-speed, 8s) * 1.5) ease-in-out infinite;
+            filter: blur(0.8px);
+            animation: sparkleFloat calc(var(--animation-speed, 6s) * 1.2) ease-in-out infinite;
             pointer-events: none;
             z-index: 0;
         }
 
-        .glass .sparkle:nth-child(1) { top: 15%; left: 20%; animation-delay: 0s; }
-        .glass .sparkle:nth-child(2) { top: 70%; left: 75%; animation-delay: 3s; width: 5px; height: 5px; }
-        .glass .sparkle:nth-child(3) { top: 40%; left: 60%; animation-delay: 6s; }
-        .glass .sparkle:nth-child(4) { top: 80%; left: 25%; animation-delay: 2s; width: 3px; height: 3px; }
-        .glass .sparkle:nth-child(5) { top: 25%; left: 85%; animation-delay: 5s; }
+        .glass .sparkle:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+        .glass .sparkle:nth-child(2) { top: 75%; left: 80%; animation-delay: 2.5s; width: 5px; height: 5px; }
+        .glass .sparkle:nth-child(3) { top: 45%; left: 70%; animation-delay: 4.5s; }
 
         @keyframes sparkleFloat {
             0% { transform: translate(0, 0) scale(1); opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { transform: translate(15px, -25px) scale(0); opacity: 0; }
+            25% { opacity: 1; }
+            75% { opacity: 1; }
+            100% { transform: translate(20px, -30px) scale(0); opacity: 0; }
         }
 
         .glass > * {
             position: relative;
             z-index: 1;
-        }
-
-        /* Отключение анимаций */
-        body.no-animations .glass::before,
-        body.no-animations .glass::after,
-        body.no-animations .glass .sparkle {
-            animation: none !important;
-            opacity: 0 !important;
-        }
-
-        body.no-animations .glass {
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
         }
 
         /* ================================================
@@ -404,29 +333,25 @@
             align-items: center;
             gap: 14px;
             margin-bottom: 16px;
-            animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .profile-avatar {
-            width: 52px;
-            height: 52px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             background: var(--accent-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             color: #0a0a0a;
             flex-shrink: 0;
-        }
-
-        .profile-info {
-            flex: 1;
+            box-shadow: 0 6px 20px rgba(247, 151, 30, 0.3);
         }
 
         .profile-info .name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
         }
 
@@ -437,7 +362,7 @@
 
         .profile-info .stats {
             display: flex;
-            gap: 16px;
+            gap: 14px;
             margin-top: 4px;
         }
 
@@ -449,10 +374,241 @@
             gap: 4px;
         }
 
-        .profile-info .stats img {
-            width: 14px;
-            height: 14px;
-            filter: invert(1) brightness(0.4);
+        /* ================================================
+           🎰 РУЛЕТКА
+           ================================================ */
+        .roulette-card {
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .slot-machine {
+            position: relative;
+            height: 90px;
+            overflow: hidden;
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--glass-border);
+            margin: 10px 0;
+        }
+
+        .slot-machine::before,
+        .slot-machine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 45px;
+            z-index: 4;
+            pointer-events: none;
+        }
+        .slot-machine::before {
+            left: 0;
+            background: linear-gradient(90deg, var(--bg-primary) 0%, transparent 100%);
+        }
+        .slot-machine::after {
+            right: 0;
+            background: linear-gradient(-90deg, var(--bg-primary) 0%, transparent 100%);
+        }
+
+        .slot-track {
+            display: flex;
+            will-change: transform;
+            height: 100%;
+            align-items: center;
+            gap: 8px;
+            padding: 0 8px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .slot-track.spinning .slot-item {
+            filter: blur(1.5px);
+            transition: filter 0.1s ease;
+        }
+
+        .slot-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 74px;
+            padding: 6px 10px;
+            border-radius: 14px;
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            flex-shrink: 0;
+            gap: 4px;
+        }
+
+        .slot-item.active {
+            background: rgba(247, 151, 30, 0.15);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(247, 151, 30, 0.35);
+            transform: scale(1.05);
+            filter: blur(0px) !important;
+        }
+
+        .slot-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .slot-item .name {
+            font-size: 9px;
+            font-weight: 600;
+            text-align: center;
+            max-width: 70px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .slot-indicator {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 3px;
+            background: var(--accent-gradient);
+            border-radius: 4px;
+            box-shadow: 0 0 15px var(--accent);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* ================================================
+           📦 КОЛЛЕКЦИЯ NFT
+           ================================================ */
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .nft-grid-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+        }
+
+        .nft-grid-item img {
+            width: 100%;
+            height: 110px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nft-grid-item .nft-title {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nft-grid-item .nft-num {
+            font-size: 10px;
+            opacity: 0.5;
+        }
+
+        .empty-collection {
+            text-align: center;
+            padding: 40px 20px;
+            opacity: 0.4;
+            font-size: 13px;
+        }
+
+        /* ================================================
+           МОДАЛЬНОЕ ОКНО ВЫИГРЫША
+           ================================================ */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay.show { display: flex; }
+
+        .win-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-border-top);
+            border-radius: 28px;
+            padding: 28px 20px 24px;
+            max-width: 320px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+        }
+
+        .win-card .nft-image {
+            width: 110px;
+            height: 110px;
+            border-radius: 18px;
+            object-fit: cover;
+            margin: 0 auto 14px;
+            display: block;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .win-card .win-title {
+            font-size: 12px;
+            opacity: 0.5;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .win-card .win-name {
+            font-size: 18px;
+            font-weight: 900;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .win-card .win-number {
+            font-size: 12px;
+            opacity: 0.5;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .win-card .btn-claim {
+            background: var(--accent-gradient);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0a0a0a;
+            cursor: pointer;
+            width: 100%;
         }
 
         /* ================================================
@@ -460,20 +616,13 @@
            ================================================ */
         .page {
             display: none;
-            animation: fadeIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: fadeIn 0.3s ease;
         }
 
-        .page.active {
-            display: block;
-        }
+        .page.active { display: block; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -486,186 +635,96 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .quest-card:nth-child(2) { animation-delay: 0.05s; }
-        .quest-card:nth-child(3) { animation-delay: 0.1s; }
-
-        .quest-card.completed {
-            opacity: 0.4;
-            border-color: rgba(255, 255, 255, 0.02);
-        }
+        .quest-card.completed { opacity: 0.4; }
 
         .quest-card .icon {
-            width: 42px;
-            height: 42px;
+            width: 40px;
+            height: 40px;
             border-radius: 12px;
             background: var(--glass-bg);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
         }
 
-        .quest-card .icon img {
-            width: 24px;
-            height: 24px;
-            filter: invert(1) brightness(0.7);
-        }
-
-        .quest-card .info {
-            flex: 1;
-        }
-
-        .quest-card .info .title {
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .quest-card .info .desc {
-            font-size: 11px;
-            opacity: 0.4;
-            margin-top: 2px;
-        }
-
-        .quest-card .reward {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent);
-        }
-
-        .quest-card .reward img {
-            width: 18px;
-            height: 18px;
-            filter: invert(1) brightness(0.8);
-        }
+        .quest-card .icon img { width: 22px; height: 22px; filter: invert(1) brightness(0.7); }
+        .quest-card .info { flex: 1; }
+        .quest-card .info .title { font-size: 13px; font-weight: 600; }
+        .quest-card .info .desc { font-size: 11px; opacity: 0.4; margin-top: 2px; }
+        .quest-card .reward { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: var(--accent); }
+        .quest-card .reward img { width: 16px; height: 16px; filter: invert(1) brightness(0.8); }
 
         .quest-btn {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-primary);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 12px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             flex-shrink: 0;
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
         }
-
-        .quest-btn:active {
-            transform: scale(0.94);
-        }
-
-        .quest-btn.done {
-            background: rgba(255, 255, 255, 0.02);
-            opacity: 0.3;
-        }
+        .quest-btn img { width: 14px; height: 14px; filter: invert(1); }
+        .quest-btn.done { opacity: 0.3; }
 
         /* ================================================
-           КНОПКИ (A Ц О С СТИЛЬ)
+           КНОПКИ
            ================================================ */
         .action-btn {
             border: none;
             padding: 14px;
-            border-radius: 14px;
-            font-size: 15px;
+            border-radius: 16px;
+            font-size: 14px;
             font-weight: 600;
             width: 100%;
             cursor: pointer;
             margin-top: 10px;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            position: relative;
-            overflow: hidden;
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
-        }
-
-        .action-btn:active {
-            transform: scale(0.96);
         }
 
         .action-btn.primary {
             background: var(--accent-gradient);
             color: #0a0a0a;
+            box-shadow: 0 10px 30px rgba(247, 151, 30, 0.3);
         }
 
         .action-btn.glass {
             background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
             color: var(--text-primary);
+            box-shadow: var(--glass-shadow);
         }
 
-        .action-btn.glass:active {
-            transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.15);
-        }
+        .action-btn img { width: 18px; height: 18px; filter: invert(1) brightness(0.8); }
+        .action-btn.primary img { filter: invert(1) brightness(0.2); }
 
-        .action-btn img {
-            width: 20px;
-            height: 20px;
-            filter: invert(1) brightness(0.8);
-        }
-
-        .action-btn.primary img {
-            filter: invert(1) brightness(0.2);
-        }
-
-        .action-btn.success {
-            background: #22c55e;
-            color: #fff;
-        }
-
-        /* ================================================
-           СТАТУС
-           ================================================ */
         .status-msg {
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.3;
             margin-top: 12px;
-            padding: 8px;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-
-        .status-msg.success {
-            opacity: 0.8;
-            color: #22c55e;
-        }
-
-        .status-msg.error {
-            opacity: 0.8;
-            color: #ef4444;
-        }
-
-        .status-msg.info {
-            opacity: 0.8;
-            color: #60a5fa;
-        }
+        .status-msg.success { opacity: 0.8; color: #22c55e; }
+        .status-msg.error { opacity: 0.8; color: #ef4444; }
+        .status-msg.info { opacity: 0.8; color: #60a5fa; }
 
         /* ================================================
            НАСТРОЙКИ
            ================================================ */
-        .settings-group {
-            margin-bottom: 16px;
-        }
-
+        .settings-group { margin-bottom: 16px; }
         .settings-group .label {
-            font-size: 11px;
+            font-size: 10px;
             opacity: 0.4;
             letter-spacing: 2px;
             text-transform: uppercase;
@@ -680,43 +739,26 @@
             justify-content: space-between;
             padding: 12px 16px;
             background: var(--glass-bg);
-            border-radius: 12px;
+            border-radius: 14px;
             border: 1px solid var(--glass-border);
             margin-bottom: 6px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
         }
 
-        .settings-option:active {
-            transform: scale(0.98);
-        }
-
-        .settings-option .left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .settings-option .left .icon {
-            font-size: 18px;
-        }
-
-        .settings-option .left .text {
-            font-size: 13px;
-            font-weight: 500;
-        }
+        .settings-option .left { display: flex; align-items: center; gap: 12px; }
+        .settings-option .left .icon { font-size: 16px; }
+        .settings-option .left .text { font-size: 13px; font-weight: 500; }
 
         .settings-option .check {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             border: 2px solid var(--glass-border);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .settings-option.active .check {
@@ -727,18 +769,12 @@
         .settings-option.active .check::after {
             content: '✓';
             color: #0a0a0a;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 700;
         }
 
-        .settings-option .value {
-            font-size: 14px;
-            opacity: 0.6;
-            font-weight: 600;
-        }
-
         /* ================================================
-           НИЖНЕЕ МЕНЮ (A Ц О С СТИЛЬ)
+           НИЖНЕЕ МЕНЮ (НАВИГАЦИЯ)
            ================================================ */
         .bottom-menu {
             position: fixed;
@@ -753,7 +789,6 @@
             justify-content: space-around;
             padding: 8px 0 12px;
             z-index: 100;
-            transition: background 0.6s ease;
         }
 
         .menu-item {
@@ -763,19 +798,13 @@
             gap: 2px;
             cursor: pointer;
             padding: 4px 12px;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .menu-item:active {
-            transform: scale(0.92);
         }
 
         .menu-item img {
-            width: 26px;
-            height: 26px;
+            width: 22px;
+            height: 22px;
             filter: invert(1) brightness(0.3);
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: 0.3s;
         }
 
         .menu-item.active img {
@@ -783,51 +812,41 @@
         }
 
         .menu-item span {
-            font-size: 9px;
+            font-size: 8px;
             opacity: 0.3;
             letter-spacing: 1px;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             font-weight: 600;
+            transition: 0.3s;
         }
 
         .menu-item.active span {
-            opacity: 0.8;
-        }
-
-        /* ================================================
-           АДАПТИВ
-           ================================================ */
-        @media (max-width: 420px) {
-            .content { padding: 12px; }
-            .header { padding: 16px 12px 10px; }
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== ПОГОДА ===== -->
+    <!-- ПОГОДА -->
     <div class="weather-container" id="weatherContainer"></div>
 
-    <!-- ===== ВЕРХНИЙ БАР ===== -->
+    <!-- ВЕРХНИЙ БАР -->
     <div class="header">
         <div class="logo">
             <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="logo">
             ANTIDOT
         </div>
-        <div class="balance" id="balanceDisplay">
+        <div class="balance">
             <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="spin">
-            <span id="spinCount">0</span>
+            <span id="spinCount">10</span>
         </div>
     </div>
 
-    <!-- ===== КОНТЕНТ ===== -->
+    <!-- КОНТЕНТ -->
     <div class="content">
 
         <!-- ===== ГЛАВНАЯ ===== -->
         <div class="page active" id="page-home">
-
             <div class="profile-card glass">
-                <div class="sparkle"></div>
                 <div class="sparkle"></div>
                 <div class="sparkle"></div>
                 <div class="profile-avatar" id="avatarLetter">👤</div>
@@ -835,96 +854,75 @@
                     <div class="name" id="userName">Загрузка...</div>
                     <div class="username" id="userTag">@username</div>
                     <div class="stats">
-                        <span>
-                            <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="spins">
-                            <span id="statSpins">0</span>
-                        </span>
-                        <span>
-                            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="refs">
-                            <span id="statRefs">0</span>
-                        </span>
+                        <span>🎟️ <span id="statSpins">10</span></span>
+                        <span>🎨 <span id="nftCount">0</span></span>
                     </div>
                 </div>
             </div>
 
-            <div style="text-align:center;padding:10px 0 5px;opacity:0.2;font-size:11px;letter-spacing:3px;">
-                ✦ ОТКРЫВАЙ КЕЙСЫ ✦
+            <!-- РУЛЕТКА С АВАТАРКАМИ -->
+            <div class="roulette-card glass">
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div style="text-align:center;font-size:10px;letter-spacing:2px;opacity:0.4;text-transform:uppercase;">
+                    🎰 NFT Рулетка
+                </div>
+
+                <div class="slot-machine" id="slotMachine">
+                    <div class="slot-track" id="slotTrack"></div>
+                    <div class="slot-indicator"></div>
+                </div>
+
+                <button class="action-btn primary" id="spinBtn">
+                    <span>🎰 КРУТИТЬ</span>
+                </button>
             </div>
 
-            <button class="action-btn glass" onclick="testConnection()">
-                <img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png" alt="test">
-                📡 ТЕСТ СВЯЗИ
-            </button>
+            <button class="action-btn glass" onclick="testConnection()">📡 ТЕСТ СВЯЗИ</button>
+            <button class="action-btn glass" onclick="getRefLink()">🔗 РЕФЕРАЛКА</button>
 
-            <button class="action-btn glass" style="margin-top:8px;" onclick="getRefLink()">
-                🔗 РЕФЕРАЛКА
-            </button>
+            <div class="status-msg" id="statusMsg">крути рулетку</div>
+        </div>
 
-            <button class="action-btn primary" style="margin-top:8px;" onclick="getProfile()">
-                👤 ПРОФИЛЬ
-            </button>
-
-            <div class="status-msg" id="statusMsg">готов к работе</div>
+        <!-- ===== КОЛЛЕКЦИЯ ===== -->
+        <div class="page" id="page-collection">
+            <h3 style="font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:4px;">✦ МОЯ КОЛЛЕКЦИЯ</h3>
+            <div style="font-size:11px;opacity:0.4;margin-bottom:12px;">Выигранные NFT предметы</div>
+            
+            <div id="collectionContainer">
+                <div class="empty-collection">Пусто... Крути рулетку, чтобы собрать коллекцию!</div>
+            </div>
         </div>
 
         <!-- ===== КВЕСТЫ ===== -->
         <div class="page" id="page-quests">
-            <h3 style="margin-bottom:16px;font-weight:300;letter-spacing:2px;opacity:0.6;">✦ КВЕСТЫ</h3>
+            <h3 style="font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:12px;">✦ КВЕСТЫ</h3>
 
             <div class="quest-card glass" id="quest1">
-                <div class="sparkle"></div>
-                <div class="icon">
-                    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968895.png" alt="tg">
-                </div>
+                <div class="icon"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968895.png" alt="tg"></div>
                 <div class="info">
                     <div class="title">Подписаться на канал</div>
                     <div class="desc">@AntidotChannel</div>
                 </div>
-                <div class="reward">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="reward">
-                    1
-                </div>
-                <button class="quest-btn" onclick="doQuest(1)">→</button>
+                <div class="reward"><img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="reward">1</div>
+                <button class="quest-btn" id="qbtn1" onclick="doQuest(1)"><img src="https://cdn-icons-png.flaticon.com/512/5291/5291043.png" alt="check"></button>
             </div>
 
             <div class="quest-card glass" id="quest2">
-                <div class="sparkle"></div>
-                <div class="icon">
-                    <img src="https://cdn-icons-png.flaticon.com/512/5968/5968895.png" alt="tg">
-                </div>
+                <div class="icon"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968895.png" alt="tg"></div>
                 <div class="info">
                     <div class="title">Зайти в чат</div>
                     <div class="desc">@AntidotChat</div>
                 </div>
-                <div class="reward">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="reward">
-                    3
-                </div>
-                <button class="quest-btn" onclick="doQuest(2)">→</button>
-            </div>
-
-            <div class="quest-card glass" id="quest3">
-                <div class="sparkle"></div>
-                <div class="icon">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2838/2838912.png" alt="time">
-                </div>
-                <div class="info">
-                    <div class="title">Подождать 1 час</div>
-                    <div class="desc">⏳ вернись через час</div>
-                </div>
-                <div class="reward">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="reward">
-                    6
-                </div>
-                <button class="quest-btn" onclick="doQuest(3)">→</button>
+                <div class="reward"><img src="https://cdn-icons-png.flaticon.com/512/2695/2695170.png" alt="reward">3</div>
+                <button class="quest-btn" id="qbtn2" onclick="doQuest(2)"><img src="https://cdn-icons-png.flaticon.com/512/5291/5291043.png" alt="check"></button>
             </div>
         </div>
 
         <!-- ===== НАСТРОЙКИ ===== -->
         <div class="page" id="page-settings">
-            <h3 style="margin-bottom:16px;font-weight:300;letter-spacing:2px;opacity:0.6;">✦ НАСТРОЙКИ</h3>
+            <h3 style="font-size:14px;font-weight:600;letter-spacing:1px;margin-bottom:14px;">✦ НАСТРОЙКИ</h3>
 
-            <!-- ШРИФТ -->
             <div class="settings-group">
                 <span class="label">Шрифт</span>
                 <div class="settings-option" onclick="setFont('inter')" data-font="inter">
@@ -935,25 +933,16 @@
                     <div class="left"><span class="icon">🔢</span><span class="text">JetBrains Mono</span></div>
                     <div class="check"></div>
                 </div>
-                <div class="settings-option" onclick="setFont('serif')" data-font="serif">
-                    <div class="left"><span class="icon">✒️</span><span class="text">Playfair Display</span></div>
-                    <div class="check"></div>
-                </div>
                 <div class="settings-option" onclick="setFont('minecraft')" data-font="minecraft">
                     <div class="left"><span class="icon">⛏️</span><span class="text">Minecraft</span></div>
                     <div class="check"></div>
                 </div>
             </div>
 
-            <!-- ТЕМА -->
             <div class="settings-group">
                 <span class="label">Тема</span>
                 <div class="settings-option" onclick="setTheme('dark')" data-theme="dark">
                     <div class="left"><span class="icon">🌙</span><span class="text">Тёмная</span></div>
-                    <div class="check"></div>
-                </div>
-                <div class="settings-option" onclick="setTheme('light')" data-theme="light">
-                    <div class="left"><span class="icon">☀️</span><span class="text">Светлая</span></div>
                     <div class="check"></div>
                 </div>
                 <div class="settings-option" onclick="setTheme('amoled')" data-theme="amoled">
@@ -970,7 +959,6 @@
                 </div>
             </div>
 
-            <!-- ПОГОДА -->
             <div class="settings-group">
                 <span class="label">Погода</span>
                 <div class="settings-option" onclick="setWeather('none')" data-weather="none">
@@ -986,24 +974,30 @@
                     <div class="check"></div>
                 </div>
             </div>
-
-            <!-- АНИМАЦИИ -->
-            <div class="settings-group">
-                <span class="label">Анимации</span>
-                <div class="settings-option" onclick="toggleAnimations()" id="animToggle">
-                    <div class="left"><span class="icon">✨</span><span class="text">Включены</span></div>
-                    <div class="check"></div>
-                </div>
-            </div>
         </div>
 
     </div>
 
-    <!-- ===== НИЖНЕЕ МЕНЮ ===== -->
+    <!-- ОВЕРЛЕЙ ВЫИГРЫША -->
+    <div class="overlay" id="winOverlay">
+        <div class="win-card">
+            <img class="nft-image" id="winNftImage" src="" alt="NFT">
+            <div class="win-title">🎉 ТЫ ВЫИГРАЛ</div>
+            <div class="win-name" id="winNftName">-</div>
+            <div class="win-number" id="winNftNumber">-</div>
+            <button class="btn-claim" onclick="hideWinScreen()">🔥 ЗАБРАТЬ В КОЛЛЕКЦИЮ</button>
+        </div>
+    </div>
+
+    <!-- ===== НИЖНЕЕ МЕНЮ (ВКЛАДКИ) ===== -->
     <div class="bottom-menu">
         <div class="menu-item active" onclick="switchPage('home')">
             <img src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="home">
             <span>ГЛАВНАЯ</span>
+        </div>
+        <div class="menu-item" onclick="switchPage('collection')">
+            <img src="https://cdn-icons-png.flaticon.com/512/1047/1047501.png" alt="collection">
+            <span>КОЛЛЕКЦИЯ</span>
         </div>
         <div class="menu-item" onclick="switchPage('quests')">
             <img src="https://cdn-icons-png.flaticon.com/512/54/54702.png" alt="quests">
@@ -1013,250 +1007,250 @@
             <img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png" alt="settings">
             <span>НАСТРОЙКИ</span>
         </div>
-        <div class="menu-item" onclick="getProfile()">
-            <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="profile">
-            <span>ПРОФИЛЬ</span>
-        </div>
     </div>
 
-    <!-- ================================================ -->
-    <!-- JAVASCRIPT -->
-    <!-- ================================================ -->
+    <!-- JS СВЯЗКА C TELEGRAM И БОТОМ -->
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
 
-        // ================================================
-        // ПОЛЬЗОВАТЕЛЬ
-        // ================================================
-        let userData = {};
+        let userData = { firstName: 'User', username: 'username' };
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            const user = tg.initDataUnsafe.user;
-            userData = {
-                id: user.id,
-                firstName: user.first_name || 'User',
-                lastName: user.last_name || '',
-                username: user.username || 'username'
-            };
-            document.getElementById('userName').textContent = userData.firstName + ' ' + userData.lastName;
+            const u = tg.initDataUnsafe.user;
+            userData = { firstName: u.first_name || 'User', username: u.username || 'username' };
+            document.getElementById('userName').textContent = userData.firstName;
             document.getElementById('userTag').textContent = '@' + userData.username;
             document.getElementById('avatarLetter').textContent = userData.firstName.charAt(0).toUpperCase();
         }
 
-        // ================================================
-        // LOCALDB
-        // ================================================
         const LocalDB = {
-            set(key, data) {
-                try { localStorage.setItem('antidot_' + key, JSON.stringify(data)); } catch (e) {}
-            },
-            get(key) {
-                try { return JSON.parse(localStorage.getItem('antidot_' + key)); } catch (e) { return null; }
-            }
+            set(key, data) { try { localStorage.setItem('antidot_' + key, JSON.stringify(data)); } catch (e) {} },
+            get(key) { try { return JSON.parse(localStorage.getItem('antidot_' + key)); } catch (e) { return null; } }
         };
 
-        // ================================================
-        // КВЕСТЫ
-        // ================================================
-        const questStatus = { 1: false, 2: false, 3: false };
-        const savedQuests = LocalDB.get('quests');
-        if (savedQuests) Object.assign(questStatus, savedQuests);
+        let localSpins = parseInt(localStorage.getItem('antidot_spins')) || 10;
+        let myCollection = LocalDB.get('collection') || [];
+        let questStatus = LocalDB.get('quests') || { 1: false, 2: false };
 
-        function saveQuestStatus() { LocalDB.set('quests', questStatus); }
+        // ОТПРАВКА ДАННЫХ В PYTHON БОТ
+        function sendToBot(action, payload = {}) {
+            const data = JSON.stringify({ action: action, ...payload });
+            try {
+                tg.sendData(data);
+            } catch (e) {
+                console.log("Ошибка отправки в Telegram WebApp Data:", e);
+            }
+        }
 
-        // ================================================
-        // БАЛАНС
-        // ================================================
-        let localSpins = parseInt(localStorage.getItem('antidot_spins')) || 0;
-
-        function updateLocalSpins(spins) {
+        function updateSpins(spins) {
             localSpins = spins;
             localStorage.setItem('antidot_spins', String(spins));
             document.getElementById('spinCount').textContent = spins;
             document.getElementById('statSpins').textContent = spins;
         }
 
-        // ================================================
-        // СТРАНИЦЫ
-        // ================================================
+        function renderCollection() {
+            const container = document.getElementById('collectionContainer');
+            document.getElementById('nftCount').textContent = myCollection.length;
+            if (myCollection.length === 0) {
+                container.innerHTML = `<div class="empty-collection">Пусто... Крути рулетку, чтобы собрать коллекцию!</div>`;
+                return;
+            }
+            container.innerHTML = `<div class="collection-grid">` + myCollection.map(nft => `
+                <div class="nft-grid-item glass">
+                    <img src="${nft.image}" crossorigin="anonymous" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1047/1047501.png'">
+                    <div class="nft-title">${nft.name}</div>
+                    <div class="nft-num">${nft.number || '#NFT'}</div>
+                </div>
+            `).join('') + `</div>`;
+        }
+
+        const nfts = [
+            { name: 'UFC STRIKE', number: '#37452', image: 'https://i.getgems.io/rx0bPX-_pmAdXzGRHbQC1dSmFVplaVqVmr25csWHFkk/rs:fill:1000:0:1/g:ce/czM6Ly9nZXRnZW1zLXMzL25mdC1jb250ZW50LWNhY2hlL2ltYWdlcy9FUURhajE4Y2Q2MVZMWkhDSHNNN3NLYmZ4QnVkRDNnYVNmY04wMm9sVm5RM0JDSUIvMDdhMjk4YzU1ZjQ0NTE2NQ' },
+            { name: 'UFC STRIKE', number: '#41301', image: 'https://i.getgems.io/Xsae_ref0M5tQkd_g-xR_SydgIFhWSYvBoYfDXPgKl0/rs:fill:1000:0:1/g:ce/czM6Ly9nZXRnZW1zLXMzL25mdC1jb250ZW50LWNhY2hlL2ltYWdlcy9FUURhajE4Y2Q2MVZMWkhDSHNNN3NLYmZ4QnVkRDNnYVNmY04wMm9sVm5RM0JDSUIvMzNiZDU2YThiZmQ4NWEzNA' },
+            { name: 'Swiss Watch', number: '#1706', image: 'https://i.getgems.io/kiysWKjhHHIgNifOjm9F2APHjhJnYUGNip9d7HmxYY8/rs:fill:1000:0:1/g:ce/czM6Ly9nZXRnZW1zLXMzL25mdC1jb250ZW50LWNhY2hlL2ltYWdlcy9FUUJJMDdQWGV3OTRZUXo3R3dONzJuUE5HRjZodFNUT0prdVU0S3hfYmpUWnYzMlUvYmY4YTdmM3JjYTMxMTFhMw' },
+            { name: 'Faith Amulet', number: '#111354', image: 'https://i.getgems.io/g1-nuARiuRQGiPRETmTQk9BDEnIgT74tCnI3px9O1PY/rs:fill:1000:0:1/g:ce/czM6Ly9nZXRnZW1zLXMzL25mdC1jb250ZW50LWNhY2hlL2ltYWdlcy9FUUQ5ejg3aFJaQVY3QzJNVjFnazM5LWJTZzVZZnMyRWRNcjlIZks4MUl1QjJSbGMvMmU1ZWNjODY5MmRlOTM3Zg' },
+            { name: 'Cupid Charm', number: '#6084', image: 'https://i.getgems.io/I4XHNd0CPeUX7TBgFpwuHNBu0cW7WF1Pwgvi4PnemJg/rs:fill:1000:0:1/g:ce/czM6Ly9nZXRnZW1zLXMzL25mdC1jb250ZW50LWNhY2hlL2ltYWdlcy9FUUEwSkJpVkNqZGdqa2lIaVltSWdUVUJiWkk2bU5iblN5bXFmMEhGQzdGaHhwdVQvYzM1NWM1MjNmMjRkNjJjNg' },
+            { name: 'Low Rider', number: '#1238', image: 'https://i.getgems.io/PplpkWaTKdjHudLgJR_EWLIOMZarJS_6kHhdTglF910/rs:fill:1000:0:1/g:ce/czM6Ly9nZXRnZW1zLXMzL25mdC1jb250ZW50LWNhY2hlL2ltYWdlcy9FUURDUHE3UVNVdkNtcTdrQmhtRHVseFZkZUZIS0ZjMXdUOU1ReG5lc2FubDFIcWwvMzU0ZGIxODJjODUyMGU3MA' },
+            { name: 'Toy Bear', number: '#368', image: 'https://i.getgems.io/ozn-25fBJChfb-ApKyAdYmvC0IvC1hxiSEe0FhjIJPs/rs:fill:1000:0:1/g:ce/czM6Ly9nZXRnZW1zLXMzL25mdC1jb250ZW50LWNhY2hlL2ltYWdlcy9FUUMxZ3VkNlFPOE5kSmpWcnFyN3FGQk1PMG9Rc2t0a3Z6aG1JUm9NS284dnhpeUwvNDY5ODRhNmM4YjM4ODBjYg' }
+        ];
+
+        const track = document.getElementById('slotTrack');
+        const slotMachine = document.getElementById('slotMachine');
+        let currentOffset = 0, isSpinning = false, itemWidth = 88, lastWonNft = null;
+
+        function buildTrack() {
+            track.innerHTML = '';
+            let fullList = [];
+            for (let i = 0; i < 15; i++) fullList = fullList.concat(nfts);
+            fullList.forEach(nft => {
+                const div = document.createElement('div');
+                div.className = 'slot-item';
+                div.innerHTML = `<img src="${nft.image}" crossorigin="anonymous" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1047/1047501.png'"><span class="name">${nft.name}</span>`;
+                track.appendChild(div);
+            });
+            updateMetrics();
+        }
+
+        function updateMetrics() {
+            const firstItem = track.querySelector('.slot-item');
+            if (firstItem) itemWidth = firstItem.offsetWidth + 8;
+        }
+
+        function getCenterOffset() {
+            return (slotMachine.clientWidth / 2) - (itemWidth / 2) - 8;
+        }
+
+        function updateTrack(offset) {
+            track.style.transform = `translateX(${offset}px)`;
+            const centerX = slotMachine.clientWidth / 2;
+            track.querySelectorAll('.slot-item').forEach((el, index) => {
+                const itemCenter = offset + (index * itemWidth) + (itemWidth / 2);
+                el.classList.toggle('active', Math.abs(itemCenter - centerX) < (itemWidth / 2));
+            });
+        }
+
+        function spinWheel() {
+            if (isSpinning || localSpins <= 0) {
+                if (localSpins <= 0) setStatus('❌ попытки закончились', 'error');
+                return;
+            }
+
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+            track.classList.add('spinning');
+            setStatus('🌀 кручу...', 'info');
+
+            sendToBot('spin'); // Синхронизируем спин с пайтон ботом
+
+            const startOffset = getCenterOffset();
+            const selectedIndex = Math.floor(Math.random() * nfts.length);
+            lastWonNft = nfts[selectedIndex];
+
+            const targetItemIndex = (8 * nfts.length) + selectedIndex;
+            const targetOffset = startOffset - (targetItemIndex * itemWidth);
+            const duration = 3500, startTime = performance.now();
+
+            function animate(time) {
+                const progress = Math.min((time - startTime) / duration, 1);
+                currentOffset = startOffset + (targetOffset - startOffset) * (1 - Math.pow(1 - progress, 4));
+                updateTrack(currentOffset);
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    currentOffset = targetOffset;
+                    updateTrack(targetOffset);
+                    isSpinning = false;
+                    updateSpins(localSpins - 1);
+                    document.getElementById('spinBtn').disabled = localSpins <= 0;
+                    track.classList.remove('spinning');
+                    showWinScreen(lastWonNft);
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function showWinScreen(nft) {
+            document.getElementById('winNftImage').src = nft.image;
+            document.getElementById('winNftName').textContent = nft.name;
+            document.getElementById('winNftNumber').textContent = nft.number;
+            document.getElementById('winOverlay').classList.add('show');
+        }
+
+        function hideWinScreen() {
+            if (lastWonNft) {
+                myCollection.unshift(lastWonNft);
+                LocalDB.set('collection', myCollection);
+                renderCollection();
+                sendToBot('nft_claimed', { nft: lastWonNft.name, image: lastWonNft.image, number: lastWonNft.number });
+                lastWonNft = null;
+            }
+            document.getElementById('winOverlay').classList.remove('show');
+            setStatus(localSpins > 0 ? 'готов к кручению' : '❌ попытки закончились', localSpins > 0 ? 'success' : 'error');
+        }
+
         function switchPage(page) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page-' + page).classList.add('active');
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-            const map = { home: 0, quests: 1, settings: 2 };
+            const map = { home: 0, collection: 1, quests: 2, settings: 3 };
             document.querySelectorAll('.menu-item')[map[page] || 0].classList.add('active');
         }
 
-        // ================================================
-        // СТАТУС
-        // ================================================
         function setStatus(msg, type) {
             const el = document.getElementById('statusMsg');
             el.textContent = msg;
-            el.className = 'status-msg';
-            if (type) el.classList.add(type);
-            setTimeout(() => {
-                if (type !== 'error') { el.className = 'status-msg';
-                    el.textContent = 'готов к работе'; }
-            }, 5000);
+            el.className = 'status-msg ' + (type || '');
         }
 
-        // ================================================
-        // ТЕСТ СВЯЗИ
-        // ================================================
         function testConnection() {
-            tg.sendData(JSON.stringify({
-                action: 'test_connection',
-                test_data: 'Hello from WebApp! Time: ' + new Date().toLocaleTimeString()
-            }));
-            setStatus('📡 отправлено в бота...', 'info');
+            sendToBot('test_connection');
+            setStatus('📡 Запрос отправлен в бота!', 'info');
         }
 
-        // ================================================
-        // РЕФЕРАЛКА
-        // ================================================
         function getRefLink() {
-            tg.sendData(JSON.stringify({ action: 'get_ref_link' }));
-            setStatus('🔗 запрос ссылки...', 'info');
+            sendToBot('get_ref_link');
+            setStatus('🔗 Ссылка запрошена в чате бота', 'info');
         }
 
-        // ================================================
-        // ПРОФИЛЬ
-        // ================================================
-        function getProfile() {
-            tg.sendData(JSON.stringify({ action: 'get_profile' }));
-            setStatus('⏳ запрос профиля...', 'info');
+        function doQuest(id) {
+            if (questStatus[id]) return;
+            questStatus[id] = true;
+            LocalDB.set('quests', questStatus);
+            document.getElementById('quest' + id).classList.add('completed');
+            
+            const rw = (id === 1 ? 1 : 3);
+            updateSpins(localSpins + rw);
+            sendToBot('quest_done', { quest_id: id });
+            setStatus('✅ квест выполнен!', 'success');
         }
 
-        // ================================================
-        // КВЕСТ
-        // ================================================
-        function doQuest(questId) {
-            const card = document.getElementById('quest' + questId);
-            const btn = card.querySelector('.quest-btn');
-            if (questStatus[questId]) { setStatus('❌ уже выполнено', 'error'); return; }
-            questStatus[questId] = true;
-            saveQuestStatus();
-            btn.textContent = '✓';
-            btn.classList.add('done');
-            card.classList.add('completed');
-            const rewards = { 1: 1, 2: 3, 3: 6 };
-            const reward = rewards[questId] || 0;
-            tg.sendData(JSON.stringify({ action: 'quest_done', quest_id: questId }));
-            const newSpins = parseInt(localStorage.getItem('antidot_spins') || 0) + reward;
-            updateLocalSpins(newSpins);
-            setStatus('✅ +' + reward + ' рулеток', 'success');
-        }
-
-        // ================================================
-        // НАСТРОЙКИ
-        // ================================================
-
-        // ----- Шрифт -----
         function setFont(font) {
-            const fonts = {
-                inter: "'Inter', -apple-system, system-ui, sans-serif",
-                mono: "'JetBrains Mono', monospace",
-                serif: "'Playfair Display', serif",
-                minecraft: "'Press Start 2P', monospace"
-            };
+            const fonts = { inter: "'Inter', sans-serif", mono: "'JetBrains Mono', monospace", minecraft: "'Press Start 2P', monospace" };
             document.documentElement.style.setProperty('--font-family', fonts[font]);
             LocalDB.set('font', font);
-            document.querySelectorAll('.settings-option[data-font]').forEach(el => {
-                el.classList.toggle('active', el.dataset.font === font);
-            });
+            document.querySelectorAll('.settings-option[data-font]').forEach(el => el.classList.toggle('active', el.dataset.font === font));
         }
 
-        // ----- Тема -----
         function setTheme(theme) {
             document.body.className = 'theme-' + theme;
             LocalDB.set('theme', theme);
-            document.querySelectorAll('.settings-option[data-theme]').forEach(el => {
-                el.classList.toggle('active', el.dataset.theme === theme);
-            });
+            document.querySelectorAll('.settings-option[data-theme]').forEach(el => el.classList.toggle('active', el.dataset.theme === theme));
         }
 
-        // ----- Погода -----
         function setWeather(type) {
             const container = document.getElementById('weatherContainer');
             container.innerHTML = '';
-            document.querySelectorAll('.settings-option[data-weather]').forEach(el => {
-                el.classList.toggle('active', el.dataset.weather === type);
-            });
+            document.querySelectorAll('.settings-option[data-weather]').forEach(el => el.classList.toggle('active', el.dataset.weather === type));
             if (type === 'none') return;
-            const count = type === 'snow' ? 40 : 30;
-            const emoji = type === 'snow' ? '❄️' : '💧';
-            const className = type === 'snow' ? 'snowflake' : 'raindrop';
-            for (let i = 0; i < count; i++) {
+            for (let i = 0; i < 30; i++) {
                 const el = document.createElement('div');
-                el.className = className;
-                el.textContent = type === 'snow' ? emoji : '';
+                el.className = type === 'snow' ? 'snowflake' : 'raindrop';
+                el.textContent = type === 'snow' ? '❄️' : '';
                 el.style.left = Math.random() * 100 + '%';
                 el.style.animationDuration = (Math.random() * 4 + 4) + 's';
                 el.style.animationDelay = (Math.random() * 8) + 's';
-                el.style.fontSize = (Math.random() * 10 + 10) + 'px';
-                if (type === 'rain') {
-                    el.style.height = (Math.random() * 15 + 10) + 'px';
-                    el.style.opacity = Math.random() * 0.4 + 0.1;
-                }
                 container.appendChild(el);
             }
             LocalDB.set('weather', type);
         }
 
-        // ----- Анимации -----
-        function toggleAnimations() {
-            const isOff = document.body.classList.toggle('no-animations');
-            const toggle = document.getElementById('animToggle');
-            const text = toggle.querySelector('.text');
-            const check = toggle.querySelector('.check');
-            text.textContent = isOff ? 'Выключены' : 'Включены';
-            toggle.classList.toggle('active', !isOff);
-            LocalDB.set('animations', isOff ? 'off' : 'on');
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSpins(localSpins);
+            renderCollection();
+            buildTrack();
+            setTimeout(() => { updateMetrics(); currentOffset = getCenterOffset(); updateTrack(currentOffset); }, 100);
 
-        // ================================================
-        // ЗАГРУЗКА СОХРАНЕННЫХ НАСТРОЕК
-        // ================================================
-        function loadSettings() {
-            const font = LocalDB.get('font') || 'inter';
-            setFont(font);
-            const theme = LocalDB.get('theme') || 'dark';
-            setTheme(theme);
-            const weather = LocalDB.get('weather') || 'none';
-            setWeather(weather);
-            const anim = LocalDB.get('animations') || 'on';
-            if (anim === 'off') {
-                document.body.classList.add('no-animations');
-                const toggle = document.getElementById('animToggle');
-                toggle.querySelector('.text').textContent = 'Выключены';
-                toggle.classList.remove('active');
-            }
-        }
+            setFont(LocalDB.get('font') || 'inter');
+            setTheme(LocalDB.get('theme') || 'dark');
+            setWeather(LocalDB.get('weather') || 'none');
 
-        // ================================================
-        // ЗАГРУЗКА ПРИ СТАРТЕ
-        // ================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedSpins = localStorage.getItem('antidot_spins');
-            if (savedSpins) {
-                document.getElementById('spinCount').textContent = savedSpins;
-                document.getElementById('statSpins').textContent = savedSpins;
-            }
-            for (let i = 1; i <= 3; i++) {
-                if (questStatus[i]) {
-                    const card = document.getElementById('quest' + i);
-                    const btn = card.querySelector('.quest-btn');
-                    btn.textContent = '✓';
-                    btn.classList.add('done');
-                    card.classList.add('completed');
-                }
-            }
-            loadSettings();
-            console.log('🍸 Antidot с Liquid Glass загружен!');
+            document.getElementById('spinBtn').addEventListener('click', spinWheel);
         });
-    </script>
 
+        window.addEventListener('resize', () => { updateMetrics(); updateTrack(currentOffset); });
+    </script>
 </body>
 </html>
